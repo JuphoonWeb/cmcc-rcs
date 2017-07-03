@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.juphoon.cmccrcs.videomeet.mapper.VideoMeetMemberMapper">
+  <resultMap id="BaseResultMap" type="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
+    <constructor>
+      <idArg column="member_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="member_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="member_phone" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="is_read" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
+    <constructor>
+      <idArg column="member_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="member_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="member_phone" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="is_read" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="member_info" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    member_id, member_name, member_phone, meet_id, is_read
+  </sql>
+  <sql id="Blob_Column_List">
+    member_info
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMemberExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from video_meet_member
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMemberExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from video_meet_member
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from video_meet_member
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from video_meet_member
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
+    insert into video_meet_member (member_id, member_name, member_phone, 
+      meet_id, is_read, member_info
+      )
+    values (#{memberId,jdbcType=INTEGER}, #{memberName,jdbcType=VARCHAR}, #{memberPhone,jdbcType=VARCHAR}, 
+      #{meetId,jdbcType=INTEGER}, #{isRead,jdbcType=INTEGER}, #{memberInfo,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
+    insert into video_meet_member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="memberName != null">
+        member_name,
+      </if>
+      <if test="memberPhone != null">
+        member_phone,
+      </if>
+      <if test="meetId != null">
+        meet_id,
+      </if>
+      <if test="isRead != null">
+        is_read,
+      </if>
+      <if test="memberInfo != null">
+        member_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="memberName != null">
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPhone != null">
+        #{memberPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="meetId != null">
+        #{meetId,jdbcType=INTEGER},
+      </if>
+      <if test="isRead != null">
+        #{isRead,jdbcType=INTEGER},
+      </if>
+      <if test="memberInfo != null">
+        #{memberInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBatch" parameterType="list" useGeneratedKeys="true" keyProperty="memberId">
+    INSERT INTO video_meet_member
+    (meet_id,member_name,member_phone,member_info)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.meetId,jdbcType=INTEGER},#{item.memberName,jdbcType=VARCHAR},#{item.memberPhone,jdbcType=VARCHAR},#{item.memberInfo,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="countByExample" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMemberExample" resultType="java.lang.Integer">
+    select count(*) from video_meet_member
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <select id="unreadCountByMemberPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*)
+    from video_meet_member
+    <where>
+      <if test = "_parameter != null">
+        member_phone = #{_parameter, jdbcType=VARCHAR} and is_read=0
+      </if>
+    </where>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update video_meet_member
+    <set>
+      <if test="record.memberId != null">
+        member_id = #{record.memberId,jdbcType=INTEGER},
+      </if>
+      <if test="record.memberName != null">
+        member_name = #{record.memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memberPhone != null">
+        member_phone = #{record.memberPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.meetId != null">
+        meet_id = #{record.meetId,jdbcType=INTEGER},
+      </if>
+      <if test="record.isRead != null">
+        is_read = #{record.isRead,jdbcType=INTEGER},
+      </if>
+      <if test="record.memberInfo != null">
+        member_info = #{record.memberInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update video_meet_member
+    set member_id = #{record.memberId,jdbcType=INTEGER},
+      member_name = #{record.memberName,jdbcType=VARCHAR},
+      member_phone = #{record.memberPhone,jdbcType=VARCHAR},
+      meet_id = #{record.meetId,jdbcType=INTEGER},
+      is_read = #{record.isRead,jdbcType=INTEGER},
+      member_info = #{record.memberInfo,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update video_meet_member
+    set member_id = #{record.memberId,jdbcType=INTEGER},
+      member_name = #{record.memberName,jdbcType=VARCHAR},
+      member_phone = #{record.memberPhone,jdbcType=VARCHAR},
+      meet_id = #{record.meetId,jdbcType=INTEGER},
+      is_read = #{record.isRead,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
+    update video_meet_member
+    <set>
+      <if test="memberName != null">
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPhone != null">
+        member_phone = #{memberPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="meetId != null">
+        meet_id = #{meetId,jdbcType=INTEGER},
+      </if>
+      <if test="isRead != null">
+        is_read = #{isRead,jdbcType=INTEGER},
+      </if>
+      <if test="memberInfo != null">
+        member_info = #{memberInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
+    update video_meet_member
+    set member_name = #{memberName,jdbcType=VARCHAR},
+      member_phone = #{memberPhone,jdbcType=VARCHAR},
+      meet_id = #{meetId,jdbcType=INTEGER},
+      is_read = #{isRead,jdbcType=INTEGER},
+      member_info = #{memberInfo,jdbcType=LONGVARCHAR}
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
+    update video_meet_member
+    set member_name = #{memberName,jdbcType=VARCHAR},
+      member_phone = #{memberPhone,jdbcType=VARCHAR},
+      meet_id = #{meetId,jdbcType=INTEGER},
+      is_read = #{isRead,jdbcType=INTEGER}
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+</mapper>

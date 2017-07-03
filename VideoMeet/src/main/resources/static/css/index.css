@@ -1,0 +1,99 @@
+.jfCard {
+    text-align: center;
+    background: #007aff;
+    font-weight: bold;
+    color: white;
+    width: 50%;
+    height: 100px;
+    line-height: 100px;
+}
+
+.jfCard a {
+    text-decoration: none;
+    color: white;
+}
+
+.jfCard a:hover, .jfCard a:visited, .jfCard a:link, .jfCard a:active {
+   color: white;
+}
+
+.jsCard:first-of-type {
+    border-right: 1px solid #ffffff;
+}
+
+.start {
+    background: #ffffff;
+    border: 1px solid gray;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    line-height: 85px;
+    text-align: center;
+    margin: 30px auto;
+}
+
+.current-phone {
+    line-height: 30px;
+    text-align: center;
+    margin: 20px auto;
+}
+
+.isRead{
+    color: darkgray;
+}
+
+.meetId, .meetDatetime {
+    width: 50%;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+.meetId{
+    float: left;
+}
+
+.meetDatetime{
+    float: right;
+}
+
+.meetSubject{
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+.meetChairman {
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+.listCard~.listCard{
+    margin-top: 5px;
+}
+
+.detailCard{
+    padding: 15px 10px;
+    background: #ffffff;
+}
+
+.detailCard~.detailCard{
+    margin-top: 5px;
+}
+
+.meetCard p {
+    float: right;
+    text-align: right;
+}
+
+.title{
+    margin: 20px 15px 7px;
+    color: #6d6d72;
+    font-size: 15px;
+}
