@@ -177,15 +177,15 @@ public class MainController {
                                  @RequestParam ("chairmanPhone") String chairmanPhone,
                                  @RequestParam ("chairmanInfo") String chairmanInfo,
                                  @RequestParam ("members") String members) {
-        if (meetSubject.length() > 40) {
-            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
-        }
+//        if (meetSubject.length() > 40) {
+//            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+//        }
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String meetDateTime = format.format(new Date());
         VideoMeetInfo videoMeetInfo = new VideoMeetInfo(meetSubject, chairmanName, chairmanPhone, chairmanInfo, meetDateTime, members);
         int result = videoMeetInfoService.saveVideoMeetInfo(videoMeetInfo);
-        if (result <=0 ) {
+        if (result <= 0) {
             return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
         }
 
@@ -295,7 +295,7 @@ public class MainController {
         final String summary = "会议ID：" + videoMeetInfo.getMeetId() + "\r\n" +
                 "会议时间：" + videoMeetInfo.getMeetDatetime() + "\r\n" +
                 "会议发起人：" + videoMeetInfo.getChairmanName() + " " + videoMeetInfo.getChairmanPhone()+"\r\n";
-        final String redirectUrl = "http://122.227.209.194:8088/VideoMeet/showVideoMeetInfoDetail/"+videoMeetInfo.getMeetId()+"?currentPhone=";
+        final String redirectUrl = "http://120.27.131.68:8086/VideoMeet/showVideoMeetInfoDetail/"+videoMeetInfo.getMeetId()+"?currentPhone=";
         final String senderNumber = videoMeetInfo.getChairmanPhone();
         new Thread(new Runnable() {
             @Override

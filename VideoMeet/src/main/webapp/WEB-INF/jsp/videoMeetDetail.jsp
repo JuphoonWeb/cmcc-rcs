@@ -36,7 +36,7 @@
 <div id="mainContent" class="mui-content" style="display: none;">
     <ul id="videoMeetInfo" class="mui-table-view">
         <li id="videoMeetId" class="mui-table-view-cell">会议ID</li>
-        <li id="videoMeetSubject" class="mui-table-view-cell">会议主题</li>
+        <li id="videoMeetSubject" class="mui-table-view-cell" style="word-wrap: break-word">会议主题</li>
         <li id="videoMeetChairman" class="mui-table-view-cell">发起人</li>
         <li id="videoMeetDatetime" class="mui-table-view-cell">会议时间</li>
     </ul>
