@@ -1,6 +1,7 @@
 package com.juphoon.cmccrcs.videomeet.service;
 
 import com.juphoon.cmccrcs.videomeet.config.MyBatisConfiguration;
+import com.juphoon.cmccrcs.videomeet.utils.DatetimeUtils;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by JeffWang on 2017/6/27.
@@ -99,6 +103,7 @@ public class TokenService {
     }
 
     public void requestTokenByIAM() {
+        System.out.println("requestTokenByIAM:"+ DatetimeUtils.standardFormatDate());
         HttpHeaders headers = new HttpHeaders();
         // 这个对象有add()方法，可往请求头存入信息
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
@@ -112,11 +117,19 @@ public class TokenService {
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 String responseBody = responseEntity.getBody();
                 JSONObject jsonObject = JSONObject.fromObject(responseBody);
-                logger.debug("body:" + responseEntity.getBody());
+                System.out.println("body:" + responseEntity.getBody());
 
                 String accessToken = (String) jsonObject.get("access_token");
                 int expireDuring = Integer.valueOf((String) jsonObject.get("expires_in"));
                 TokenService.IAM_ACCESS_TOKEN = accessToken;
+
+                ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+                service.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestTokenByIAM();
+                    }
+                },expireDuring*9/10, TimeUnit.SECONDS);
             } else {
                 logger.debug("body:" + responseEntity.getBody());
             }

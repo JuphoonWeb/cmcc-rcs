@@ -15,7 +15,7 @@ public class ApplicationStartup implements ApplicationListener<ContextRefreshedE
         if(event.getApplicationContext().getParent() == null) {
             System.out.println("onApplicationEvent");
             //在容器加载完毕后获取dao层来操作数据库
-            TokenService tokenService = (TokenService)event.getApplicationContext().getBean(TokenService.class);
+            TokenService tokenService = event.getApplicationContext().getBean(TokenService.class);
             tokenService.requestTokenByIAM();
         }
     }
