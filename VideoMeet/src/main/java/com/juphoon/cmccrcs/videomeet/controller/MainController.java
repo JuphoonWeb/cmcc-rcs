@@ -300,6 +300,7 @@ public class MainController {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                rcsMsgService.sendRcsMessage(senderNumber, senderNumber, RcsMsgService.MsgMediaType.text, title, summary, "", redirectUrl);
                 for (VideoMeetMember videoMeetMember:videoMeetMemberList) {
                     String recvNumber = videoMeetMember.getMemberPhone();
                     try {
