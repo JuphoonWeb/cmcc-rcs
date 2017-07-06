@@ -131,11 +131,11 @@
             $(joinMeetBtn).css("margin-left","29.166666%");
         }
 
-        if (currentPhone != '') {
+//        if (currentPhone != '') {
             hideTipContent();
-        } else {
-            $("#tipContent").css("display","table");
-        }
+//        } else {
+//            $("#tipContent").css("display","table");
+//        }
 //        alert("CurrentPhone:"+currentPhone);
     });
 

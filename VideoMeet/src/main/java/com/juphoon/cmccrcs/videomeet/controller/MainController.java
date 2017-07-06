@@ -10,6 +10,8 @@ import com.juphoon.cmccrcs.videomeet.service.VideoMeetMemberService;
 import com.juphoon.cmccrcs.videomeet.service.TokenService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -31,7 +33,9 @@ import java.util.*;
 @Controller
 @RequestMapping("/VideoMeet")
 public class MainController {
-
+    
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+            
     @Autowired
     private VideoMeetInfoService videoMeetInfoService;
     @Autowired
@@ -47,10 +51,10 @@ public class MainController {
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             String headerValue = request.getHeader(headerName);//取出头信息内容
-            System.out.println("headerName:"+headerName+" headerValue:"+headerValue);
+            logger.debug("headerName:"+headerName+" headerValue:"+headerValue);
         }
         String authInfo = request.getHeader("authorization");
-        System.out.println("authorization:"+authInfo);
+        logger.debug("authorization:"+authInfo);
         return "index";
     }
 
@@ -64,15 +68,20 @@ public class MainController {
         return "error";
     }
 
-    @RequestMapping(value="/videoMeetList/{phone}", method = RequestMethod.GET)
-    public String videoMeetList(HttpSession httpSession, @PathVariable String phone, Model model) {
-        model.addAttribute("currentPhone", phone);
-        httpSession.setAttribute("currentPhone", phone);
+    @RequestMapping(value="/videoMeetList/{currentPhone}", method = RequestMethod.GET)
+    public String videoMeetListWithPhone(HttpSession httpSession, Model model, @PathVariable String currentPhone) {
+        model.addAttribute("currentPhone", currentPhone);
+        httpSession.setAttribute("currentPhone", currentPhone);
         return "videoMeetList";
     }
 
-    @RequestMapping("/videoMeetList")
-    public String videoMeetList(Model model) {
+    @RequestMapping(value="/videoMeetList", method = RequestMethod.GET)
+    public String videoMeetList(HttpSession httpSession, Model model, @RequestParam("token")String token) {
+        if (!StringUtils.isEmpty(token)) {
+            String currentPhone = tokenService.requestMsisdnByCmPassport(token);
+            model.addAttribute("currentPhone", currentPhone);
+            httpSession.setAttribute("currentPhone", currentPhone);
+        }
         return "videoMeetList";
     }
 
@@ -134,22 +143,28 @@ public class MainController {
     }
 
     @RequestMapping ( "/showVideoMeetInfoDetail/{meetId}")
-    public ModelAndView showVideoMeetInfoDetail(HttpServletRequest request, @PathVariable int meetId, @RequestParam("currentPhone")String currentPhone) {
+    public ModelAndView showVideoMeetInfoDetail(HttpServletRequest request, @PathVariable int meetId) {
         Map<String,Object> model = new HashMap<String, Object>();
         VideoMeetInfo videoMeetInfo = videoMeetInfoService.selectOneByMeetId(meetId);
         model.put("videoMeetInfo", videoMeetInfo);
 
+        String currentPhone = request.getParameter("currentPhone");
+        String token = request.getParameter("token");
+
         if (StringUtils.isEmpty(currentPhone)) {
             String authInfo = request.getHeader("authorization");
-            System.out.println("authInfo:"+authInfo);
             if (!StringUtils.isEmpty(authInfo)) {
                 int firstQuotation = authInfo.indexOf("\"")+1;
                 int secendQuotation = authInfo.lastIndexOf("\"");
-                String token = authInfo.substring(firstQuotation,secendQuotation);
-                System.out.println("token:"+token);
+                token = authInfo.substring(firstQuotation,secendQuotation);
+                currentPhone = tokenService.requestMsisdnByCmPassport(token);
+            }
+            else if(!StringUtils.isEmpty(token)) {
                 currentPhone = tokenService.requestMsisdnByCmPassport(token);
             }
         }
+        logger.debug("token:"+token);
+        logger.debug("currentPhone:"+currentPhone);
 
         if (!StringUtils.isEmpty(currentPhone)) {
             videoMeetMemberService.updateUnreadByMeetIdAndPhone(meetId, currentPhone);
@@ -285,7 +300,7 @@ public class MainController {
             Map.Entry entry = (Map.Entry) entries.next();
             String key = (String) entry.getKey();
             Object valueObj = entry.getValue();
-            System.out.println("key:"+key+" value:"+valueObj.toString());
+            logger.debug("key:"+key+" value:"+valueObj.toString());
         }
         return getRequest().getParameter("token");
     }

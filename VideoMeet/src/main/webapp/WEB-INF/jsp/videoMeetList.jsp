@@ -63,9 +63,6 @@
     });
 
     function rcsOptimizeReady() {
-        if (currentPhone != '')
-            return;
-
         if(isIOSInFeixin()){
             navigator.WebContainer.getEnterpriseContact("backID", "phoneInit");
         } else if (isAndroidInFeixin()) {

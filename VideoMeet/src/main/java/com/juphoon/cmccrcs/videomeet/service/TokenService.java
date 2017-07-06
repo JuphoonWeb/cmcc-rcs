@@ -103,7 +103,7 @@ public class TokenService {
     }
 
     public void requestTokenByIAM() {
-        System.out.println("requestTokenByIAM:"+ DatetimeUtils.standardFormatDate());
+        logger.debug("requestTokenByIAM:"+ DatetimeUtils.standardFormatDate());
         HttpHeaders headers = new HttpHeaders();
         // 这个对象有add()方法，可往请求头存入信息
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
@@ -117,7 +117,7 @@ public class TokenService {
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 String responseBody = responseEntity.getBody();
                 JSONObject jsonObject = JSONObject.fromObject(responseBody);
-                System.out.println("body:" + responseEntity.getBody());
+                logger.debug("body:" + responseEntity.getBody());
 
                 String accessToken = (String) jsonObject.get("access_token");
                 int expireDuring = Integer.valueOf((String) jsonObject.get("expires_in"));
