@@ -9,7 +9,8 @@ var phoneType = navigator.userAgent.toLocaleLowerCase();
 var creatMeetingScheme = "juphoonultimateshow://creatMeeting?",
     joinMeetingScheme="juphoonultimateshow://joinMeeting?";
 var androidAppDownloadUrl = "https://www.pgyer.com/KXq0",
-    iOSAppDownloadUrl="https://www.pgyer.com/97L0";
+    iOSAppDownloadUrl="https://www.pgyer.com/97L0",
+    pcAppDownloadUrl = "http://122.227.209.194:8088/CmccRcs/windows/VideoMeet.exe";
 var appPackageName = "com.juphoon.ultimateshow.cmcc";
 
 var createScheme=function(options,isCreate){
@@ -101,12 +102,6 @@ function openAppWithCreateMeet(meetPassword, chairmanName, chairmanPhone, member
         //     localUrl = createScheme(options,true);//代码还可以优化一下
         // }
 
-        if (isIOS()) {
-            locationiOSDownloadWebPage();
-        } else {
-            locationAndroidDownloadWebPage();
-        }
-        window.location = localUrl;
     }
 }
 
@@ -121,12 +116,7 @@ function openAppWithJoinMeet(meetId, meetPassword, displayName) {
     } else if(isAndroidInFeixin()){
         window.WebContainer.openURLScheme(jsonStr);
     } else {
-        if (isIOS()) {
-            locationiOSDownloadWebPage();
-        } else {
-            locationAndroidDownloadWebPage();
-        }
-        window.location = localUrl;
+        launchAppWithUrl(localUrl);
     }
 }
 
@@ -170,24 +160,22 @@ function rcsMsgFwdFunc(backId, status) {
     }
 }
 
-function locationAndroidDownloadWebPage() {
+function launchAppWithUrl(url) {
+    window.location.href = url;
     setTimeout(function () {
-        var btnArray = ['否', '是'];
-        mui.confirm('是否跳转到下载页面？', '应用未安装', btnArray, function (e) {
+        var btnArray = ['启动成功', '启动失败'];
+        mui.confirm('多方视频会议是否启动成功？', '', btnArray, function (e) {
             if (e.index == 1) {
-                window.location.href = androidAppDownloadUrl;
+                mui.alert('请下载安装 多方视频会议', '多方视频会议启动失败', function() {
+                    if (isAndroid()) {
+                        window.location = androidAppDownloadUrl;
+                    } else if (isIOS()) {
+                        window.location = iOSAppDownloadUrl;
+                    } else {
+                        window.location = pcAppDownloadUrl;
+                    }
+                });
             }
         });
-    }, 2000);
-}
-
-function locationiOSDownloadWebPage() {
-    setTimeout(function () {
-        var btnArray = ['否', '是'];
-        mui.confirm('是否跳转到下载页面？', '应用未安装', btnArray, function (e) {
-            if (e.index == 1) {
-                window.location.href = iOSAppDownloadUrl;
-            }
-        });
-    }, 2000);
+    }, 3000);
 }
