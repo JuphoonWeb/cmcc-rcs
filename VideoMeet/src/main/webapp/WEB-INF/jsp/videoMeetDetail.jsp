@@ -140,7 +140,11 @@
     });
 
     function afterRecvAppStatus() {
-        joinVideoMeet();
+        if (isExistMethod("openURLScheme")) {
+            joinVideoMeet();
+        } else {
+            mui.alert("630以下版本不支持行业消息打开多方视频会议App，请返回负一屏进入应用再加入会议");
+        }
     }
 
     function joinVideoMeet() {
