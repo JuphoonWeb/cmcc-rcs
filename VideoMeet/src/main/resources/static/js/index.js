@@ -1,7 +1,7 @@
 /**
  * Created by JeffWang on 2017/6/6.
  */
-mui.init();
+//mui.init();
 
 var phoneType = navigator.userAgent.toLocaleLowerCase();
 

@@ -72,7 +72,8 @@ public class MainController {
     public String videoMeetListWithPhone(HttpSession httpSession, Model model, @PathVariable String currentPhone) {
         model.addAttribute("currentPhone", currentPhone);
         httpSession.setAttribute("currentPhone", currentPhone);
-        return "videoMeetList";
+        return "newjsp/multiMeeting";
+        //return "videoMeetList";
     }
 
     @RequestMapping(value="/videoMeetList", method = RequestMethod.GET)
@@ -82,7 +83,13 @@ public class MainController {
             model.addAttribute("currentPhone", currentPhone);
             httpSession.setAttribute("currentPhone", currentPhone);
         }
-        return "videoMeetList";
+        return "newjsp/multiMeeting";
+        //return "videoMeetList";
+    }
+
+    @RequestMapping("/createMeeting")
+    public String createMeeting() {
+        return "newjsp/createMeeting";
     }
 
     @RequestMapping("/method")

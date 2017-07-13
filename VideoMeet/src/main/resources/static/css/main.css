@@ -1,0 +1,89 @@
+.head-bar-container{
+	position:fixed;
+	width:100%;
+	border-bottom: 5px solid rgb(255,255,255);
+}
+.head-bar{
+	height:60px;width:100%;
+	line-height:60px;
+	background-color:rgb(0, 197, 195);
+	color:rgb(255,255,255);
+	font-size:16px;
+}
+.mobile-tab{
+	height:40px;
+	line-height:40px;
+	font-size:16px;
+	background-color:rgb(255,255,255);
+}
+.mobile-tab.selected{
+	color: rgb(51, 122, 183);
+	border-bottom:2px rgb(51, 122, 183) solid;
+}
+.pc-tab-container{
+	position:relative;
+	left:-130px;
+	top:85px;
+}
+li.pc-tab{	
+	width:120px;height:30px;
+	line-height:30px;
+	color:rgb(51, 122, 183);
+	border-radius: 5px;
+	cursor:pointer;
+}
+li.pc-tab:hover{
+	background-color:rgb(234,234,234); 
+}
+li.pc-tab.selected{
+	color:rgb(255,255,255);
+	background-color:rgb(51, 122, 183); 
+}
+.list-container{
+	margin-top: 115px;
+}
+.list{
+	display:none;
+	font-size:12px;
+	cursor: pointer;
+}
+.item{
+	height:70px;
+	padding:5px 10px;
+	margin:10px auto;
+	box-shadow: 0px 1px 2px rgb(218, 218, 218);
+	border:1px rgb(218, 218, 218) solid;
+	border-top-left-radius:10px;
+	background-color: rgb(255,255,255);
+}
+.item:hover{
+	background-color: rgb(234,234,234);
+}
+.item a{
+	color:rgb(133, 133, 133);
+}
+.pagination{
+	margin-top: -30px;
+}
+.add{
+	position:fixed;
+	width:32px;height:32px;
+	right:30px;bottom:40px;
+}
+.add a{
+	width:100%;
+	height:100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
