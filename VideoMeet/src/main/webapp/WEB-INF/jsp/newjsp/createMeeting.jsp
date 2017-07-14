@@ -3,10 +3,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>创建新事项</title>
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/animate.css">
-	<link rel="stylesheet" href="css/dialog.css">
-	<link href="css/date-time-picker.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/index.css" />
+	<link rel="stylesheet" href="/css/animate.css">
+	<link rel="stylesheet" href="/css/dialog.css">
+	<link href="/css/date-time-picker.min.css" rel="stylesheet">
 	<style>
 		.nav-bar{
 			height:60px;
@@ -52,21 +53,21 @@
 <body>
 	<div class="nav-bar text-center">创建新事项</div>
 	<div class="container">
-		<form action="" novalidate onsubmit="return check()">
+		<form novalidate onsubmit="return false">
 			<div class="form-group">
 				<label for="title">会议主题</label>
 				<input class="form-control" type="text"
 				name="title" id="title" required placeholder="请输入会议主题">
 			</div>
 			<div class="form-group date-time">
-				<label for="">会议时间</label>
+				<label for="date">会议时间</label>
 				<div class="row">
 					<div class="col-xs-7">
-						<input type="button" class="form-control text-left" id="date" name="date" required  value="点击选择会议日期">
+						<input type="button" class="form-control text-left" id="date" name="date" required  value="选择会议日期">
 					</div>
 					<div class="col-xs-5">
 						<input type="button" class="form-control text-left" id="time" name="time"
-				required value="点击选择会议时间">
+				required value="选择会议时间">
 				</div>
 				</div>
 			</div>
@@ -82,37 +83,35 @@
 
 				<div class="row">
 					<div class="sponsor col-xs-3 text-center center-block">
-						<img src="image/sponsor.png" alt="" class="">
+						<img src="/img/sponsor.png" alt="" class="">
 						<p>我</p>
 					</div>
 					<div class="partner-list"></div>
 					<div class="add col-xs-3 text-center center-block">
-						<img src="image/add.png" alt="" class="">
+						<img src="/img/add.png" alt="" class="">
 						<p>添加</p>
 					</div>
 					<div class="delete col-xs-3 text-center center-block">
-						<img src="image/delete.png" alt="" class="">
+						<img src="/img/delete.png" alt="" class="">
 						<p>删除</p>
 					</div>
 					<div class="complete col-xs-3 text-center center-block">
-						<img src="image/complete.png" alt="" class="">
+						<img src="/img/complete.png" alt="" class="">
 						<p>完成</p>
 					</div>
 					
 				</div>
 			</div>
 			<div class="btn-group btn-block">
-				<button type="submit" id="submit" class="btn btn-primary btn-block">创建</button>
-				<button type="reset" class="btn btn-default btn-block">取消</button>
+				<button type="submit" id="create" class="btn btn-primary btn-block">创建</button>
+				<button type="cancel" class="btn btn-default btn-block">取消</button>
 			</div>
 		</form>
   
 	</div>
 </body>
-<script src="js/zepto.min.js"></script>
-<script src="js/dialog.min.js"></script>
-<script src="js/date-time-picker.min.js"></script>
-
+<script src="/js/date-time-picker.min.js"></script>
+<script type="text/javascript" src="/js/index.js" ></script>
 <script>
 	$('#date').click(function () {
     var dt = new DateTimePicker.Date({
@@ -139,9 +138,8 @@
 		return parseInt($('#partner-num').val());
 	}
 	$('.add').click(function(){
-		$('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner"><div class="do-delete"></div><img src="image/partner.png" alt="" class="partner-head"><p>其他人</p></div>');
-		$('#partner-num').val(getPatnerNumber()+1);
 	
+		checkAppInstalled();
 	});
 	$('.delete').click(function(){
 		delSwitch=true;
@@ -150,7 +148,7 @@
 		$('.add').hide();
 		$('.complete').show();
 		for(img of $('.partner-head')){	
-			img.src='image/do-delete.png';
+			img.src='/img/do-delete.png';
 		}
 	});
 	$('.complete').click(function(){
@@ -161,7 +159,7 @@
 		$('.add').show();
 		$('.delete').show();
 		for(img of $('.partner-head')){	
-			img.src='image/partner.png';
+			img.src='/img/partner.png';
 		}
 	});
 	$(document).on("click", '#partner', function() {
@@ -170,38 +168,161 @@
 				$('#partner-num').val(getPatnerNumber()-1);
 				$(this).hide();
 				$(this).remove();
-			}
+            	var html = $(this).find('p').html();
+            	var num;
+				for(var i=0; contactArray.length; i++) {
+				    if(contactArray[i].name == html) {
+				        num = i;
+				        break;
+					}
+				}
+				contactArray.splice(num, 1);
+            for(var i=0; contactArray.length; i++) {
+                alert(contactArray[i].name)
+            }
+        }
     });
-	
-	function check(){
-		var result=false;
-		var contentText="";
-		if($('#title').val()===""){
-			contentText='请输入会议主题';
-			$('#title').focus();
-		}
-		else if($('#date').val()===""){
-			contentText='请选择会议日期';
-			$('#date').focus();
-		}else if($('#time').val()===""){
-			contentText='请选择会议时间';
-			$('#time').focus();
-		}
-		else if($('#content').val()===""){
-			contentText='请输入会议内容';
-			$('#content').focus();
-		}else if(getPatnerNumber()===1){
-			contentText='请添加参与人员';
-		}else{
-			result=true;
-		}
-		if(!result){	    
-			$(document).dialog({
-        		overlayClose: true,
-        		content: contentText,
-   			});
-	    }
-	    return result;
-	}
+
+
+	$("#create").click(function () {
+		var title = $("#title").val();
+		var date = $("#datetimepicker").val();
+		var content = $("#content").val();
+		var contentText = "";
+        if(title===""){
+            contentText = '请输入会议主题';
+        }else if(date===""){
+            contentText = '请选择会议时间';
+        }else if(content===""){
+            contentText = '请输入会议内容';
+        }else if(getPatnerNumber()===1){
+            contentText = '请添加参与人员';
+        }
+        if(contentText != ""){
+            $(document).dialog({
+                overlayClose: true,
+                content: contentText,
+            });
+            return;
+        }
+        $.ajax({
+            type : "POST",
+            url : "/VideoMeet/startVideoMeet",
+            dataType : "json",
+            data:{
+                meetSubject:title,
+                chairmanName:contactJsonObject[0].name,
+                chairmanPhone:contactJsonObject[0].phone,
+                chairmanInfo:JSON.stringify(contactJsonObject),
+                members:JSON.stringify(contactArray)
+            },
+            success : function(data){
+                if ('Failed' != data) {
+                    window.location = "/VideoMeet/showVideoMeetInfoDetail/"+data['meetId']+"?currentPhone="+currentPhone;
+                } else {
+                    $(document).dialog({
+                        overlayClose: true,
+                        content: '创建会议失败',
+                    });
+                }
+            },
+            error : function(data){
+                $(document).dialog({
+                    overlayClose: true,
+                    content: "服务器异常/n" + data.responseText,
+                });
+            }
+        });
+
+    });
+
+	$(document).on('click','.mask,.popup-confirm',function(){
+		$('.popup-confirm').addClass('active');
+		$('.popup-container').hide(500);
+		$('.popup-confirm').removeClass('active');
+	});
+    $("#cancel").click(function () {
+        window.history.back();
+    });
+
+
+
+    function afterRecvAppStatus() {
+        selectEnterpriseContactMulti();
+//        rcsContactGeneralSelector();
+    }
+    function selectEnterpriseContactMulti(){
+        if(isIOSInFeixin()){
+            navigator.WebContainer.selectEnterpriseContactMulti("多方视频会议","16","backID", "createMeetSubject", "");
+        }else if(isAndroidInFeixin()){
+            window.WebContainer.selectEnterpriseContactMulti("多方视频会议","16","backID", "createMeetSubject", "");
+        }else{
+            b();
+        }
+    }
+
+    var contactArray = new Array();
+    function createMeetSubject(jsonType,jsonContactArray) {
+        if (jsonContactArray == undefined || jsonContactArray == "") {
+            window.location = 'error.jsp';
+        }
+        var json = eval('(' + jsonContactArray + ')');
+        var flag = true;
+        for(var i=0; i < json.length; i++) {
+            for(var j =0; j<contactArray.length; j++) {
+                if(contactArray[j].name == json[i].name) {
+                    flag = false;
+                    break;
+                }
+            }
+            if(!flag) {
+                continue;
+            }
+
+            contactArray.push(json[i]);
+            $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
+                '<div class="do-delete"></div>' +
+                '<img src="/img/partner.png" alt="" class="partner-head"><p>'+json[i].name+'</p></div>');
+        }
+        $('#partner-num').val(1 + contactArray.length);
+    }
+
+
+	function init() {
+        //var buttonName = $('.mui-active')[0].id;
+        //isSender = buttonName == "sendButton";
+
+        if (!isAndroidInFeixin() && !isIOS()) {
+            $(document).dialog({
+                overlayClose: true,
+                content: '当前浏览器非安卓或者IOS',
+            });
+            a();
+        }
+    }
+
+    function a(){
+        var contactInfo = '[{"name":"","phone":"'+currentPhone+'"}]';
+        phoneInit("", contactInfo);
+    }
+
+    function rcsOptimizeReady() {
+        if(isIOSInFeixin()){
+            navigator.WebContainer.getEnterpriseContact("backID", "phoneInit");
+        } else if (isAndroidInFeixin()) {
+            window.WebContainer.getEnterpriseContact("backID", "phoneInit");
+        }
+    }
+
+    var contactJsonObject;
+    function phoneInit(backId, contactInfo){
+        console.log(contactInfo);
+        contactJsonObject = JSON.parse(contactInfo);
+        currentPhone = contactJsonObject[0].phone;
+    }
+
+    $(function () {
+        init();
+    })
 </script>
 </html>

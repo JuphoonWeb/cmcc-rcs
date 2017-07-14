@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -14,7 +15,7 @@
 	<link rel="stylesheet" href="/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="/css/main.css">
-	<script type="text/javascript" src="/js/index.js"></script>
+	<link rel="stylesheet" href="/css/dialog.css">
 	<style>
 		.nav-bar{
 			height:60px;
@@ -70,14 +71,16 @@
 	<div class="partner list-group">
 		<b>成员列表</b>
 		<!--<a class="list-group-item">${videoMeetInfo.members}.toString</a> -->
-		<div id="demo"></div>
+		<div id="demo">
+		</div>
 
 	</div>
 
 	<div class="add hidden-md hidden-lg"><a href="createMeeting.jsp"><img src="/img/add-2.png" alt=""></a></div>
 </div>
 
-<script src="/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/js/index.js"></script>
+
 <script type="text/javascript">
     var szJsonStr = '<s:property escapeJavaScript="false" escape="false" value="sendCommandList" />';
     var membersJsonArray = ${videoMeetInfo.members};
@@ -90,8 +93,6 @@
 </script>
 
 
-<script src="/js/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="/js/index.js"></script>
 <script type="text/javascript">
     var currentPhone = '${currentPhone}';
     var currentName = '${currentName}';
@@ -115,7 +116,7 @@
         }
         else
         {
-            alert("您不属于该视频会议的成员，无法加入会议");
+            dailog("您不属于该视频会议的成员，无法加入会议");
         }
     });
     var isChairman=0;
@@ -170,15 +171,15 @@
                 console.log(data);
                 if ('ok' == data)
                 {
-                    alert('发送通知成功');
+                    dailog('发送通知成功');
                 }
                 else
                 {
-                    alert('发送通知失败');
+                    dailog('发送通知失败');
                 }
             },
             error: function(xhr, type, errorThrown) {
-                alert('服务器内部连接超时，请稍后再试');
+                dailog('服务器内部连接超时，请稍后再试');
             }
         });
     }

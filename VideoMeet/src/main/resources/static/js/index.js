@@ -2,7 +2,8 @@
  * Created by JeffWang on 2017/6/6.
  */
 //mui.init();
-
+document.write("<script language=javascript src='/js/zepto.min.js'></script>");
+document.write("<script language=javascript src='/js/dialog.min.js'></script>");
 var phoneType = navigator.userAgent.toLocaleLowerCase();
 
 //增加通用链接的生成,
@@ -76,11 +77,25 @@ function recvAppStatus(status) {
     var statusJson = JSON.parse(status);
     if (statusJson['status'] == 0) {
         var btnArray = ['否', '是'];
-        mui.confirm('是否跳转到下载页面？', '应用未安装', btnArray, function(e) {
-            if (e.index == 1 && isAndroid()) {
-                window.location.href = androidAppDownloadUrl;
+
+        $(document).dialog({
+            titleText: '应用未安装',
+            type : 'confirm',
+            closeBtnShow: true,
+            content: '是否跳转到下载页面？',
+            onClickConfirmBtn: function(){
+                if (isAndroid()) {
+                    window.location.href = androidAppDownloadUrl;
+                }
             }
         });
+        //
+        //
+        // mui.confirm('是否跳转到下载页面？', '应用未安装', btnArray, function(e) {
+        //     if (e.index == 1 && isAndroid()) {
+        //         window.location.href = androidAppDownloadUrl;
+        //     }
+        // });
     } else {
         afterRecvAppStatus();
     }
@@ -139,43 +154,89 @@ function openURLSchemebackFunc(status) {
     if (statusJson['status'] == 0) {
         if (isIOSInFeixin()) {
             var btnArray = ['否', '是'];
-            mui.confirm('应用【未安装】或者【未信任】，是否跳转到安装说明界面？', '应用打开失败', btnArray, function (e) {
-                if (e.index == 1) {
+            // mui.confirm('应用【未安装】或者【未信任】，是否跳转到安装说明界面？', '应用打开失败', btnArray, function (e) {
+            //     if (e.index == 1) {
+            //         setTimeout(function () {
+            //             window.location.href="../iOSAppInstructions";
+            //         },300);
+            //     }
+            // });
+
+            $(document).dialog({
+                titleText: '应用打开失败',
+                type : 'confirm',
+                closeBtnShow: true,
+                content: '应用【未安装】或者【未信任】，是否跳转到安装说明界面？',
+                onClickConfirmBtn: function(){
                     setTimeout(function () {
                         window.location.href="../iOSAppInstructions";
                     },300);
                 }
             });
         } else {
-            mui.alert('应用打开失败');
+            dailog('应用打开失败');
         }
     }
 }
 
 function rcsMsgFwdFunc(backId, status) {
     if (status == 1) {
-        alert("通知发送成功");
+        dailog("通知发送成功");
     } else {
-        alert("通知发送失败");
+        dailog("通知发送失败");
     }
 }
 
 function launchAppWithUrl(url) {
     window.location.href = url;
     setTimeout(function () {
-        var btnArray = ['启动成功', '启动失败'];
-        mui.confirm('多方视频会议是否启动成功？', '', btnArray, function (e) {
-            if (e.index == 1) {
-                mui.alert('请下载安装 多方视频会议', '多方视频会议启动失败', function() {
-                    if (isAndroid()) {
-                        window.location = androidAppDownloadUrl;
-                    } else if (isIOS()) {
-                        window.location = iOSAppDownloadUrl;
-                    } else {
-                        window.location = pcAppDownloadUrl;
+        $(document).dialog({
+            titleText: '',
+            type : 'confirm',
+            closeBtnShow: true,
+            content: '多方视频会议是否启动成功？',
+            buttonTextConfirm: '启动成功',
+            buttonTextCancel: '启动失败',
+            onClickCancelBtn : function(){
+                $(this).dialog({
+                    titleText: '多方视频会议启动失败',
+                    type : 'confirm',
+                    closeBtnShow: true,
+                    content: '请下载安装 多方视频会议？',
+                    onClickConfirmBtn : function(){
+                        if (isAndroid()) {
+                            window.location = androidAppDownloadUrl;
+                        } else if (isIOS()) {
+                            window.location = iOSAppDownloadUrl;
+                        } else {
+                            window.location = pcAppDownloadUrl;
+                        }
+
                     }
                 });
+
             }
         });
+        // var btnArray = ['启动成功', '启动失败'];
+        // mui.confirm('多方视频会议是否启动成功？', '', btnArray, function (e) {
+        //     if (e.index == 1) {
+        //         mui.alert('请下载安装 多方视频会议', '多方视频会议启动失败', function() {
+        //             if (isAndroid()) {
+        //                 window.location = androidAppDownloadUrl;
+        //             } else if (isIOS()) {
+        //                 window.location = iOSAppDownloadUrl;
+        //             } else {
+        //                 window.location = pcAppDownloadUrl;
+        //             }
+        //         });
+        //     }
+        // });
     }, 3000);
+}
+
+function dailog(message) {
+    $(document).dialog({
+        overlayClose: true,
+        content: message,
+    });
 }

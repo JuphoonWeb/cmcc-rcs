@@ -22,7 +22,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -73,12 +75,12 @@ public class MainController {
         model.addAttribute("currentPhone", currentPhone);
         httpSession.setAttribute("currentPhone", currentPhone);
         return "newjsp/multiMeeting";
-        //return "videoMeetList";
+       // return "videoMeetList";
     }
 
     @RequestMapping(value="/videoMeetList", method = RequestMethod.GET)
     public String videoMeetList(HttpSession httpSession, Model model, @RequestParam("token")String token) {
-        if (!StringUtils.isEmpty(token)) {
+        if (!StringUtils.isEmpty(token) && httpSession.getAttribute("currentPhone") == null) {
             String currentPhone = tokenService.requestMsisdnByCmPassport(token);
             model.addAttribute("currentPhone", currentPhone);
             httpSession.setAttribute("currentPhone", currentPhone);
@@ -189,7 +191,8 @@ public class MainController {
 
 //        List<VideoMeetMember> videoMeetMemberList = videoMeetMemberService.selectMemberListByMeetId(meetId);
 //        map.put("videoMeetMemberList", JSONArray.fromObject(videoMeetMemberList).toString());
-        return new ModelAndView("videoMeetDetail", model);
+        return new ModelAndView("newjsp/meetingDetails", model);
+  //      return new ModelAndView("videoMeetDetail", model);
     }
 
     @RequestMapping (value = "/startVideoMeet", method = RequestMethod.POST)

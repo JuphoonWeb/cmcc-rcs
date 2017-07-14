@@ -45,7 +45,7 @@
 		</div>
 		<div class="add hidden-md hidden-lg"><a href="/VideoMeet/createMeeting"><img src="/img/add-2.png" alt=""></a></div>
 
-		<!-- 分页器，此处用的是bootstrap的样式，所以没有去除a标签  -->
+		<!-- 分页器，此处用的是bootstrap的样式，所以没有去除a标签
 		<ul class="pagination hidden-xs hidden-sm">
 			<li><a href="">&laquo;</a></li>
 			<li class="active"><a>1</a></li>
@@ -54,10 +54,14 @@
 			<li><a>4</a></li>
 			<li><a>5</a></li>
 			<li><a>&raquo;</a></li>
-		</ul>	
+		</ul>
+		 -->
 	</div>
 </body>
-<script src="/js/jquery-3.2.1.min.js"></script>
+<%--<script src="/js/jquery-3.2.1.min.js"></script>--%>
+
+<script src="/js/zepto.min.js"></script>
+<script src="/js/dialog.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/dropload.min.js"></script>
 <script src="/js/main.js"></script>
@@ -114,6 +118,7 @@
                 if(itemIndex == '0') {
                     $.post('/VideoMeet/getSendVideoMeetList/' + currentPhone, {start: 1, size: size}, function (data) {
                         var obj = JSON.parse(data);
+                        alert(obj)
                         result = "";
                         for (var i = 0; i < obj.videoMeetInfoList.length; i++) {
                             result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></a></div>';
@@ -148,7 +153,6 @@
 
             },
             loadDownFn : function(me){
-
                 // 加载菜单一的数据
                 if(itemIndex == '0'){
                     sendPage ++;
@@ -168,13 +172,11 @@
                             // 无数据
                             me.noData();
                         }
-                        setTimeout(function(){
-                            // 插入数据到页面，放到最后面
-                            console.log(itemIndex);
-                            $('.list').eq(itemIndex).append(result);
-                            // 每次数据插入，必须重置
-                            me.resetload();
-                        },1000);
+						// 插入数据到页面，放到最后面
+						console.log(itemIndex);
+						$('.list').eq(itemIndex).append(result);
+						// 每次数据插入，必须重置
+						me.resetload();
                     });
 
                     // 加载菜单二的数据
@@ -195,18 +197,29 @@
                             // 无数据
                             me.noData();
                         }
-                        setTimeout(function(){
                             // 插入数据到页面，放到最后面
-                            console.log(itemIndex);
-                            $('.list').eq(itemIndex).append(result);
-                            // 每次数据插入，必须重置
-                            me.resetload();
-                        },1000);
+						console.log(itemIndex);
+						$('.list').eq(itemIndex).append(result);
+						// 每次数据插入，必须重置
+						me.resetload();
                     });
 
                 }
             }
         });
     });
+
+    function getSessionId(){
+        var c_name = 'JSESSIONID';
+        if(document.cookie.length>0){
+            c_start=document.cookie.indexOf(c_name + "=")
+            if(c_start!=-1){
+                c_start=c_start + c_name.length+1
+                c_end=document.cookie.indexOf(";",c_start)
+                if(c_end==-1) c_end=document.cookie.length
+                return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+    }
 </script>
 </html>
