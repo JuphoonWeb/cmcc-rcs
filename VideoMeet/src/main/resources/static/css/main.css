@@ -79,6 +79,9 @@ li.pc-tab.selected{
 	right:5%;
 }
 @media (min-width:992px){
+	*{
+		font-size: 16px;
+	}
 	.head-bar{
 		height:100px;
 		line-height: 100px;
@@ -93,6 +96,9 @@ li.pc-tab.selected{
 		height:90px;
 		font-size: 16px;
 		border-radius:10px;
+	}
+	form{
+		margin-top: 30px;
 	}
 }
 

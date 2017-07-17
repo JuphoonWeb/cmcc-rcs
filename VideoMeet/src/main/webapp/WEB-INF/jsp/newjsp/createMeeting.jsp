@@ -33,22 +33,11 @@
 			display:none;
 			color:rgb(26, 250, 41);
 		}
-		 .date-time input{
+		input.datetime{
 			color:rgb(153,153,153);
+			background-color: rgb(255,255,255);
 		}
-		td.day.today{
-			background-color: rgb(0, 80, 204);
-		}
-
-		/* 解决date-time-picker与bootstrap的冲突 */
-		.date-picker-days-title i,.picker-row i{
-			display: inline-block;
-			height:24px;
-		}
-		/* 使得弹窗主题色与应用主题色一致 */
-		div.picker-head,i.picker-active span{
-			background-color: rgb(0, 197, 195);
-		}
+	
 	</style>
 </head>
 <body>
@@ -60,17 +49,9 @@
 				<input class="form-control" type="text"
 				name="title" id="title" required placeholder="请输入会议主题">
 			</div>
-			<div class="form-group date-time">
-				<label for="date">会议时间</label>
-				<div class="row">
-					<div class="col-xs-7">
-						<input type="button" class="form-control text-left" id="date" name="date" required  value="选择会议日期">
-					</div>
-					<div class="col-xs-5">
-						<input type="button" class="form-control text-left" id="time" name="time"
-				required value="选择会议时间">
-				</div>
-				</div>
+			<div class="form-group">
+				<label for="datetime">会议时间</label>
+				<input class="form-control text-left datetime" id="datetime" name="datetime" required placeholder="请选择会议时间">
 			</div>
 			<div class="form-group">
 				<label for="content">会议内容</label>
@@ -88,15 +69,15 @@
 						<p>我</p>
 					</div>
 					<div class="partner-list"></div>
-					<div class="add-partner col-xs-3 text-center center-block">
+					<div class="add-partner col-xs-3 text-center center-block" id="add-partner">
 						<img src="/img/add.png" alt="" class="">
 						<p>添加</p>
 					</div>
-					<div class="delete col-xs-3 text-center center-block">
+					<div class="delete col-xs-3 text-center center-block" id="delete">
 						<img src="/img/delete.png" alt="" class="">
 						<p>删除</p>
 					</div>
-					<div class="complete col-xs-3 text-center center-block">
+					<div class="complete col-xs-3 text-center center-block" id="complete">
 						<img src="/img/complete.png" alt="" class="">
 						<p>完成</p>
 					</div>
@@ -108,7 +89,6 @@
 				<button type="cancel" class="btn btn-default btn-block">取消</button>
 			</div>
 		</form>
-  
 	</div>
 </body>
 <script src="/js/date-time-picker.min.js"></script>
@@ -123,68 +103,57 @@
 	//解决zepto与jQuery的冲突
     $.noConflict();
 
-	//移动端时间日期选择器
-	$('#date').click(function () {
-    var dt = new DateTimePicker.Date({
-	      lang: 'zh-CN',
-	      default: date.value
-	    })
-	    dt.on('selected', function (formatDate, now) {
-	      console.log('selected date: ', formatDate, now)
-	      date.value = formatDate
-	    })
-	  })
-	  $('#time').click(function () {
-	    var dt = new DateTimePicker.Time({
-	      default: time.value
-	    })
-	    dt.on('selected', function (formatTime, now) {
-	      console.log('selected time: ', formatTime, now)
-	      time.value = formatTime
-	    })
-	  });
+    //和飞信时间选择器
+    $("#datetime").click(function(){
+    	window.WebContainer.forSetTime('yyyy-mm-dd HH:mm','backID','setTime');
+    });
 
-	  jQuery(document).ready(function($){
-	  		// PC端时间日期选择器
-		  $('#datetimepicker').datetimepicker({
-		  		 language:'zh-CN',
-	   			 format: 'yyyy-mm-dd hh:ii',
-	   			 startDate:new Date(),
-	   			 autoclose:true,
-	   			 showMeridian:true,
-	   			 todayBtn:true
+    function setTime(backID,dateStr){
+    	$("#datetime").val(dateStr);
+    }
+    
+
+	jQuery(document).ready(function($){
+  			// PC端时间日期选择器
+	 	 $('#datetimepicker').datetimepicker({
+	  			 language:'zh-CN',
+   				 format: 'yyyy-mm-dd hh:ii',
+   				 startDate:new Date(),
+   				 autoclose:true,
+   				 showMeridian:true,
+   				 todayBtn:true
 			});
 
-	  });
+ 	 });
 
 
 	var delSwitch=false;
 	function getPatnerNumber(){
 		return parseInt($('#partner-num').val());
 	}
-	$('.add').click(function(){
+	$('#add-partner').click(function(){
 	
 		checkAppInstalled();
 	});
-	$('.delete').click(function(){
+	$('#delete').click(function(){
 		delSwitch=true;
 		$('.partner').addClass('swing');
 		$(this).hide();
-		$('.add').hide();
-		$('.complete').show();
-		for(img of $('.partner-head')){	
-			img.src='/img/do-delete.png';
+		$('#add-partner').hide();
+		$('#complete').show();
+		for(img in $('.partner-head')){
+            $('.partner-head')[img].src='/img/do-delete.png';
 		}
 	});
-	$('.complete').click(function(){
+	$('#complete').click(function(){
 		delSwitch=false;
 		$('.partner').removeClass('swing');
 		$('.do-delete').hide();
 		$(this).hide();
-		$('.add').show();
-		$('.delete').show();
-		for(img of $('.partner-head')){	
-			img.src='/img/partner.png';
+		$('#add-partner').show();
+		$('#delete').show();
+		for(img in $('.partner-head')){
+            $('.partner-head')[img].src='/img/partner.png';
 		}
 	});
 	$(document).on("click", '#partner', function() {
@@ -211,7 +180,7 @@
 
 	$("#create").click(function () {
 		var title = $("#title").val();
-		var date = $("#datetimepicker").val();
+		var date = $("#datetime").val();
 		var content = $("#content").val();
 		var contentText = "";
         if(title===""){
@@ -303,8 +272,10 @@
             if(!flag) {
                 continue;
             }
-
             contactArray.push(json[i]);
+
+            alert(json[i].phone);
+        	getHead(json[i].phone);
             $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
                 '<div class="do-delete"></div>' +
                 '<img src="/img/partner.png" alt="" class="partner-head"><p>'+json[i].name+'</p></div>');
