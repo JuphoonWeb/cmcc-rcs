@@ -9,15 +9,8 @@
 	<link rel="stylesheet" href="/css/dialog.css">
 	<link rel="stylesheet" href="/css/date-time-picker.min.css">
 	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" href="/css/main.css">
 	<style>
-		.nav-bar{
-			height:60px;
-			line-height:60px;
-			color:rgb(255,255,255);
-			background-color:rgb(0, 197, 195);
-			margin-bottom:10px;
-			font-size:16px;
-		}
 		#partner-num{
 			font-weight: bold;
 			border:none;
@@ -30,7 +23,7 @@
 			animation-timing-function:linear;
 			animation-iteration-count: infinite;
 		}
-		.add{
+		.add-partner{
 			color:rgb(26, 250, 41);
 		}
 		.delete{
@@ -59,7 +52,7 @@
 	</style>
 </head>
 <body>
-	<div class="nav-bar text-center">创建新事项</div>
+	<div class="head-bar text-center hidden-sm hidden-xs">创建新事项</div>
 	<div class="container">
 		<form novalidate onsubmit="return false">
 			<div class="form-group">
@@ -95,7 +88,7 @@
 						<p>我</p>
 					</div>
 					<div class="partner-list"></div>
-					<div class="add col-xs-3 text-center center-block">
+					<div class="add-partner col-xs-3 text-center center-block">
 						<img src="/img/add.png" alt="" class="">
 						<p>添加</p>
 					</div>

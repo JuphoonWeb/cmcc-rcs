@@ -22,7 +22,7 @@
 </head>
 <body>
 	<div class="head-bar-container text-center">
-        <div class="head-bar">多方视频会议</div>
+        <div class="head-bar hidden-xs hidden-sm">多方视频会议</div>
         <div class="tab-container clearfix">
             <!-- 移动端页面显示的标签 -->
             <div class="mobile-tab-container row hidden-md hidden-lg">
@@ -44,18 +44,7 @@
 			<div class="list list-2 text-left animated"></div>
 		</div>
 		<div class="add hidden-md hidden-lg"><a href="/VideoMeet/createMeeting"><img src="/img/add-2.png" alt=""></a></div>
-
-		<!-- 分页器，此处用的是bootstrap的样式，所以没有去除a标签
-		<ul class="pagination hidden-xs hidden-sm">
-			<li><a href="">&laquo;</a></li>
-			<li class="active"><a>1</a></li>
-			<li><a>2</a></li>
-			<li><a>3</a></li>
-			<li><a>4</a></li>
-			<li><a>5</a></li>
-			<li><a>&raquo;</a></li>
-		</ul>
-		 -->
+        <div class="to-top hidden-sm hidden-xs" title="回到顶部"><img src="image/to-top.png" alt=""></div>
 	</div>
 </body>
 <%--<script src="/js/jquery-3.2.1.min.js"></script>--%>

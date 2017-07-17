@@ -17,15 +17,6 @@
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/dialog.css">
 	<style>
-		.nav-bar{
-			height:60px;
-			line-height:60px;
-			color:rgb(255,255,255);
-			background-color:rgb(0, 197, 195);
-			margin-bottom:10px;
-			font-size:16px;
-			margin-bottom: 20px;
-		}
 		.resend{
 			color:rgb(255,255,255);
 			background-color: rgb(0, 197, 195);
@@ -41,8 +32,8 @@
 
 </head>
 <body>
-<div class="nav-bar text-center">会议详情</div>
-<div class="container">
+    <div class="head-bar text-center hidden-xs hidden-sm">会议详情</div>
+    <div class="container">
 	<table class="detail table">
 		<tr>
 			<th>会议ID</th><td> ${videoMeetInfo.meetId}</td>
