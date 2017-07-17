@@ -7,7 +7,8 @@
 	<link rel="stylesheet" href="/css/index.css" />
 	<link rel="stylesheet" href="/css/animate.css">
 	<link rel="stylesheet" href="/css/dialog.css">
-	<link href="/css/date-time-picker.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/date-time-picker.min.css">
+	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
 	<style>
 		.nav-bar{
 			height:60px;
@@ -42,11 +43,18 @@
 		 .date-time input{
 			color:rgb(153,153,153);
 		}
+		td.day.today{
+			background-color: rgb(0, 80, 204);
+		}
 
 		/* 解决date-time-picker与bootstrap的冲突 */
 		.date-picker-days-title i,.picker-row i{
 			display: inline-block;
 			height:24px;
+		}
+		/* 使得弹窗主题色与应用主题色一致 */
+		div.picker-head,i.picker-active span{
+			background-color: rgb(0, 197, 195);
 		}
 	</style>
 </head>
@@ -112,7 +120,17 @@
 </body>
 <script src="/js/date-time-picker.min.js"></script>
 <script type="text/javascript" src="/js/index.js" ></script>
+
+<script src="/js/jquery-3.2.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
+
+
 <script>
+	//解决zepto与jQuery的冲突
+    $.noConflict();
+
+	//移动端时间日期选择器
 	$('#date').click(function () {
     var dt = new DateTimePicker.Date({
 	      lang: 'zh-CN',
@@ -132,6 +150,20 @@
 	      time.value = formatTime
 	    })
 	  });
+
+	  jQuery(document).ready(function($){
+	  		// PC端时间日期选择器
+		  $('#datetimepicker').datetimepicker({
+		  		 language:'zh-CN',
+	   			 format: 'yyyy-mm-dd hh:ii',
+	   			 startDate:new Date(),
+	   			 autoclose:true,
+	   			 showMeridian:true,
+	   			 todayBtn:true
+			});
+
+	  });
+
 
 	var delSwitch=false;
 	function getPatnerNumber(){
