@@ -120,7 +120,6 @@
                 if(itemIndex == '0') {
                     $.post('/VideoMeet/getSendVideoMeetList/' + currentPhone, {start: 1, size: size}, function (data) {
                         var obj = JSON.parse(data);
-                        alert(obj)
                         result = "";
                         for (var i = 0; i < obj.videoMeetInfoList.length; i++) {
                             result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2"><img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt=""></div></div></a></div>';
@@ -210,18 +209,5 @@
             }
         });
     });
-
-    function getSessionId(){
-        var c_name = 'JSESSIONID';
-        if(document.cookie.length>0){
-            c_start=document.cookie.indexOf(c_name + "=")
-            if(c_start!=-1){
-                c_start=c_start + c_name.length+1
-                c_end=document.cookie.indexOf(";",c_start)
-                if(c_end==-1) c_end=document.cookie.length
-                return unescape(document.cookie.substring(c_start,c_end));
-            }
-        }
-    }
 </script>
 </html>
