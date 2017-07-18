@@ -60,7 +60,7 @@
 			<div class="partner-container">
 				<div class="form-group">
 					<label for="partner-num" class="control-label">参与人员&nbsp;&nbsp;</label>
-					<input type="text" name="partner-num" id="partner-num" value="1">
+					<input type="text" name="partner-num" id="partner-num" value="1" readonly>
 				</div>
 
 				<div class="row">
@@ -86,7 +86,7 @@
 			</div>
 			<div class="btn-group btn-block">
 				<button type="submit" id="create" class="btn btn-primary btn-block">创建</button>
-				<button type="cancel" class="btn btn-default btn-block">取消</button>
+				<button type="cancel" id="cancel" class="btn btn-default btn-block">取消</button>
 			</div>
 		</form>
 	</div>
@@ -143,6 +143,7 @@
 		$('#complete').show();
 		for(img in $('.partner-head')){
             $('.partner-head')[img].src='/img/do-delete.png';
+
 		}
 	});
 	$('#complete').click(function(){
@@ -171,9 +172,9 @@
 					}
 				}
 				contactArray.splice(num, 1);
-            for(var i=0; contactArray.length; i++) {
-                alert(contactArray[i].name)
-            }
+//            for(var i=0; contactArray.length; i++) {
+//                alert(contactArray[i].name)
+//            }
         }
     });
 
@@ -256,10 +257,13 @@
     }
 
     var contactArray = new Array();
+    var phones = new Array();
+    var index;
     function createMeetSubject(jsonType,jsonContactArray) {
         if (jsonContactArray == undefined || jsonContactArray == "") {
             window.location = 'error.jsp';
         }
+        phones.length = 0;//清空数组
         var json = eval('(' + jsonContactArray + ')');
         var flag = true;
         for(var i=0; i < json.length; i++) {
@@ -273,17 +277,56 @@
                 continue;
             }
             contactArray.push(json[i]);
-
-            alert(json[i].phone);
-        	getHead(json[i].phone);
+            phones.push(json[i]);
             $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
                 '<div class="do-delete"></div>' +
-                '<img src="/img/partner.png" alt="" class="partner-head"><p>'+json[i].name+'</p></div>');
+                '<img src="/img/partner.png" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+json[i].name+'</p></div>');
         }
         $('#partner-num').val(1 + contactArray.length);
+
+        if(phones.length > 0) {
+            index = 0
+            setHeadRecursion(json[index].phone);
+		}
     }
 
+    var a
+    //递归调用
+    function setHeadRecursion(phone) {
+        a = Date.parse(new Date());
+        data = "/img/partner.png";// 没有头像的不走回调  初始化默认图片
+        getHead(phone);
+        setTimeout(function () {
+            $("#" + phones[index].phone).attr("src", data);
+            index ++;
+            if(index <= phones.length)
+                setHeadRecursion(phones[index].phone)
+        }, 100)
 
+    }
+
+    function getHead(phone) {
+		var jsonString = {backId:'head', backFunc:'getHeadByPhone', phone:phone };
+        if(isIOSInFeixin()){
+            navigator.WebContainer.getContactAvatar(JSON.stringify(jsonString));
+        }else if(isAndroidInFeixin()){
+			window.WebContainer.getContactAvatar(JSON.stringify(jsonString));
+        }else{
+            b();
+        }
+    }
+    var data = "";
+    function getHeadByPhone(jsonString) {
+        jsonString=jsonString.replace(/[\n\r]/g, '');
+        var json = JSON.parse(jsonString);
+        if(json.status == "1") {
+            data = "data:image/jpeg;base64,"+json.avatar;
+		} else {
+            data = "/img/partner.png";
+		}
+
+    }
+    
 	function init() {
         //var buttonName = $('.mui-active')[0].id;
         //isSender = buttonName == "sendButton";

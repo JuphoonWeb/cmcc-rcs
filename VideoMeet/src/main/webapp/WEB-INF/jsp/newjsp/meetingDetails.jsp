@@ -67,7 +67,7 @@
 
 	</div>
 
-	<div class="add hidden-md hidden-lg"><a href="createMeeting.jsp"><img src="/img/add-2.png" alt=""></a></div>
+	<%--<div class="add hidden-md hidden-lg"><a href="createMeeting.jsp"><img src="/img/add-2.png" alt=""></a></div>--%>
 </div>
 
 <script type="text/javascript" src="/js/index.js"></script>
