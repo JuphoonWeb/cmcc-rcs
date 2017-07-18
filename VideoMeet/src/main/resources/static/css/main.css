@@ -2,6 +2,7 @@
 	position:fixed;
 	width:100%;
 	border-bottom: 5px solid rgb(255,255,255);
+	z-index:100;
 }
 .head-bar{
 	height:60px;width:100%;
@@ -22,15 +23,16 @@
 }
 .pc-tab-container{
 	position:relative;
-	left:-130px;
-	top:85px;
+	left:60px;
+	top:120px;
 }
 li.pc-tab{	
-	width:120px;height:30px;
-	line-height:30px;
+	width:150px;height:35px;
+	line-height:35px;
 	color:rgb(51, 122, 183);
 	border-radius: 5px;
 	cursor:pointer;
+	font-size: 16px
 }
 li.pc-tab:hover{
 	background-color:rgb(234,234,234); 
@@ -38,6 +40,9 @@ li.pc-tab:hover{
 li.pc-tab.selected{
 	color:rgb(255,255,255);
 	background-color:rgb(51, 122, 183); 
+}
+form{
+	margin-top:20px;
 }
 .list-container{
 	margin-top: 50px;
@@ -60,9 +65,6 @@ li.pc-tab.selected{
 }
 .item a{
 	color:rgb(133, 133, 133);
-}
-.pagination{
-	margin-top: -30px;
 }
 .add{
 	position:fixed;
