@@ -15,8 +15,10 @@
         .badge{
             background-color: rgb(0, 197, 195);
         }
-        .unread-icon-xs,{
-            margin-top:-22px;
+        .unread-icon-xs{
+            position:relative;
+            top:-22px;
+            right:0px;
         }
         .unread-icon-md{
             position:relative;
