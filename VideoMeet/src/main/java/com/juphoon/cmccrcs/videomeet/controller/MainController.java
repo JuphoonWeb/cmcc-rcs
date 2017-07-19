@@ -157,7 +157,7 @@ public class MainController {
         VideoMeetInfo videoMeetInfo = videoMeetInfoService.selectOneByMeetId(meetId);
         model.put("videoMeetInfo", videoMeetInfo);
 
-        String currentPhone = request.getParameter("currentPhone");
+        String currentPhone = (String) request.getSession().getAttribute("currentPhone");
         String token = request.getParameter("token");
 
         if (StringUtils.isEmpty(currentPhone)) {

@@ -50,7 +50,7 @@
             <!-- 移动端页面显示的标签 -->
             <div class="mobile-tab-container row hidden-md hidden-lg">
                 <div class="tab mobile-tab col-xs-6 selected">我发起的</div>
-                <div class="tab mobile-tab col-xs-6">我收到的 <span class="badge">3</span></div>
+                <div class="tab mobile-tab col-xs-6">我收到的 <span class="badge"></span></div>
             </div>
         </div>
     </div>
@@ -59,76 +59,12 @@
             <!-- PC端页面显示的标签 -->
             <ul class="pc-tab-container nav nav-pills nav-stacked navbar-left  hidden-xs hidden-sm">
                 <li class="tab pc-tab selected">我发起的</li>
-                <li class="tab pc-tab">我收到的 <span class="badge">3</span></li>
+                <li class="tab pc-tab">我收到的 <span class="badge"></span></li>
             </ul>       
         </div>
 		<div class="list-container" id="list-container">
 			<div class="list list-1 text-left animated" id="list-1"></div>
 			<div class="list list-2 text-left animated">
-                <%-- 模拟数据，待删 --%>
-                <div class="item">
-                    <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
-                        <div class="row">
-                            <div class="col-xs-10 col-md-11">
-                                <div class="item-time"><b>2017-7-19 10:31</b></div>
-                                <div class="item-theme">会议主题: 啦啦啦</div>
-                                <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
-                            </div>
-                            <div class="col-xs-2 col-md-1">
-                                <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
-                                <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                    <div class="item">
-                        <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
-                            <div class="row">
-                                <div class="col-xs-10 col-md-11">
-                                    <div class="item-time"><b>2017-7-19 10:31</b></div>
-                                    <div class="item-theme">会议主题: 啦啦啦</div>
-                                    <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
-                                </div>
-                                <div class="col-xs-2 col-md-1">
-                                    <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
-                                    <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="item">
-                        <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
-                            <div class="row">
-                                <div class="col-xs-10 col-md-11">
-                                    <div class="item-time"><b>2017-7-19 10:31</b></div>
-                                    <div class="item-theme">会议主题: 啦啦啦</div>
-                                    <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
-                                </div>
-                                <div class="col-xs-2 col-md-1">
-                                    <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
-                                    <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="item">
-                        <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
-                            <div class="row">
-                                <div class="col-xs-10 col-md-11">
-                                    <div class="item-time"><b>2017-7-19 10:31</b></div>
-                                    <div class="item-theme">会议主题: 啦啦啦</div>
-                                    <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
-                                </div>
-                                <div class="col-xs-2 col-md-1">
-                                    <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
-                                    <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-
-
             </div>
 		</div>
 		<div class="add mobile-add hidden-md hidden-lg"><a href="/VideoMeet/createMeeting"><img src="/img/mobile-add.png" alt=""></a></div>
@@ -197,9 +133,13 @@
                 if(itemIndex == '0') {
                     $.post('/VideoMeet/getSendVideoMeetList/' + currentPhone, {start: 1, size: size}, function (data) {
                         var obj = JSON.parse(data);
+                        var unread = obj.unreadCount
+                        if(unread > 0) {
+                            $(".badge").text(unread)
+                        }
                         result = "";
                         for (var i = 0; i < obj.videoMeetInfoList.length; i++) {
-                            result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2"><img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt=""></div></div></a></div>';
+                            result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2"></div></div></a></div>';
                         }
                         $('.list').eq(itemIndex).empty();
                         $('.list').eq(itemIndex).append(result);
@@ -212,9 +152,18 @@
                 } else if(itemIndex == '1') {
                     $.post('/VideoMeet/getRecvVideoMeetList/' + currentPhone, {start: 1, size: size}, function (data) {
                         var obj = JSON.parse(data);
+                        var unread = obj.unreadCount
+                        if(unread > 0) {
+                            $(".badge").text(unread)
+                        }
                         result = "";
                         for (var i = 0; i < obj.videoMeetInfoList.length; i++) {
-                            result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt=""></div></div></a></div>';
+                            var isRead = ""
+                            if(obj.videoMeetInfoList[i].isRead == 1) {
+                                isRead = 'style="display:none;"';
+                            }
+
+                            result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" '+ isRead+' src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png"  '+ isRead+' alt=""></div></div></a></div>';
 
                         }
                         $('.list').eq(itemIndex).empty();
@@ -237,10 +186,14 @@
                     $.post('/VideoMeet/getSendVideoMeetList/' + currentPhone, {start:sendPage, size:size},function(data){
                         var obj=JSON.parse(data);
                         result = "";
-
+                        var unread = obj.unreadCount
+                        if(unread > 0) {
+                            $(".badge").text(unread)
+                        }
                         if(obj.videoMeetInfoList.length > 0) {
+
                             for(var i=0; i < obj.videoMeetInfoList.length; i++){
-                                result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt=""></div></div></a></div>';
+                                result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"></div></div></a></div>';
 
                             }
                         } else {
@@ -263,10 +216,17 @@
                     $.post('/VideoMeet/getRecvVideoMeetList/' + currentPhone, {start:recPage, size:size},function(data){
                         var obj=JSON.parse(data);
                         result = "";
-
+                        var unread = obj.unreadCount
+                        if(unread > 0) {
+                            $(".badge").text(unread)
+                        }
                         if(obj.videoMeetInfoList.length > 0) {
                             for(var i=0; i < obj.videoMeetInfoList.length; i++){
-                                result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt=""></div></div></a></div>';
+                                var isRead = "";
+                                if(obj.videoMeetInfoList[i].isRead == 1) {
+                                    isRead = 'style="display:none;"';
+                                }
+                                result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" '+ isRead+' src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png"  '+ isRead+' alt=""></div></div></a></div>';
                             }
                         } else {
                             tab2LoadEnd = true;
