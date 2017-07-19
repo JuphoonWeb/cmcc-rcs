@@ -67,4 +67,11 @@ public class VideoMeetInfoServiceImpl implements VideoMeetInfoService {
     public int saveVideoMeetInfo(VideoMeetInfo info) {
         return videoMeetInfoMapper.insertAndGetMeetId(info);
     }
+
+    @Override
+    public int updateVideoMeetInfo(VideoMeetInfo info)
+    {
+        return videoMeetInfoMapper.updateByPrimaryKeySelective(info);
+    }
+
 }

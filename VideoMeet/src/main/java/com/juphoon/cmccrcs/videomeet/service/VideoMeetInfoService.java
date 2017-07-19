@@ -16,4 +16,6 @@ public interface VideoMeetInfoService {
     public VideoMeetInfo selectOneByMeetId(int meetId);
 
     public int saveVideoMeetInfo(VideoMeetInfo info);
+
+    public int updateVideoMeetInfo(VideoMeetInfo info);
 }

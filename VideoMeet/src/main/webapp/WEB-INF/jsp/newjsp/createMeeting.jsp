@@ -206,12 +206,9 @@
 		$('#add-partner').hide();
 		$('.delete-sup').show();
 		$('#complete').show();
+
 		$('.delete-sup').show();
 
-//		for(img in $('.partner-head')){
-//            $('.partner-head')[img].src='/img/do-delete.png';
-//
-//		}
 	});
 	$('#complete').click(function(){
 		delSwitch=false;
@@ -333,6 +330,34 @@
     $(document).on('click','#add-popup-mask,#add-close,#add-cancel',function(){
 		$('#add-popup-container').hide();
 	})
+
+
+    $("#add-ok").click(function () {
+        var name = $("#add-name").val();
+        var phone = $("#add-phone").val();
+        if(name == "") {
+            dailog("姓名不能为空")
+			return;
+        }
+        if(phone == "") {
+            dailog("手机号不能为空")
+            return;
+        }
+        if(!(/^1[34578]\d{9}$/.test(phone))){
+            dailog("手机号格式不正确")
+            return;
+        }
+        var contact = {name:name, phone:phone};
+        $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
+            '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
+            '<img src="/img/partner.png" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
+
+        contactArray.push(contact);
+        $('#partner-num').val(1 + contactArray.length);
+        $('#add-popup-container').hide();
+        $("#add-name").val("");
+        $("#add-phone").val("");
+    });
 
 
     $("#add-ok").click(function () {
