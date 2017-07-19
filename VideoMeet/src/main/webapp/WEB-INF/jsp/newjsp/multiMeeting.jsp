@@ -25,6 +25,15 @@
             top:-27px;
             right:15px   
         }
+
+        .pc-tab .badge{
+            position:absolute;
+            right:15px;top:7px;
+        }
+        .mobile-tab .badge{
+            position: relative;
+            bottom:2px;
+        }
         
 
 		@media (min-width:992px){
@@ -50,15 +59,81 @@
             <!-- PC端页面显示的标签 -->
             <ul class="pc-tab-container nav nav-pills nav-stacked navbar-left  hidden-xs hidden-sm">
                 <li class="tab pc-tab selected">我发起的</li>
-                <li class="tab pc-tab">我收到的</li>
+                <li class="tab pc-tab">我收到的 <span class="badge">3</span></li>
             </ul>       
         </div>
 		<div class="list-container" id="list-container">
 			<div class="list list-1 text-left animated" id="list-1"></div>
-			<div class="list list-2 text-left animated"></div>
+			<div class="list list-2 text-left animated">
+                <%-- 模拟数据，待删 --%>
+                <div class="item">
+                    <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
+                        <div class="row">
+                            <div class="col-xs-10 col-md-11">
+                                <div class="item-time"><b>2017-7-19 10:31</b></div>
+                                <div class="item-theme">会议主题: 啦啦啦</div>
+                                <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
+                            </div>
+                            <div class="col-xs-2 col-md-1">
+                                <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
+                                <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                    <div class="item">
+                        <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
+                            <div class="row">
+                                <div class="col-xs-10 col-md-11">
+                                    <div class="item-time"><b>2017-7-19 10:31</b></div>
+                                    <div class="item-theme">会议主题: 啦啦啦</div>
+                                    <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
+                                </div>
+                                <div class="col-xs-2 col-md-1">
+                                    <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
+                                    <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
+                            <div class="row">
+                                <div class="col-xs-10 col-md-11">
+                                    <div class="item-time"><b>2017-7-19 10:31</b></div>
+                                    <div class="item-theme">会议主题: 啦啦啦</div>
+                                    <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
+                                </div>
+                                <div class="col-xs-2 col-md-1">
+                                    <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
+                                    <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'">
+                            <div class="row">
+                                <div class="col-xs-10 col-md-11">
+                                    <div class="item-time"><b>2017-7-19 10:31</b></div>
+                                    <div class="item-theme">会议主题: 啦啦啦</div>
+                                    <div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;199</div>
+                                </div>
+                                <div class="col-xs-2 col-md-1">
+                                    <img class="unread-icon-xs hidden-md hidden-lg" src="/img/unread-xs.png" alt="">
+                                    <img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png" alt="">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+
+
+            </div>
 		</div>
-		<div class="add hidden-md hidden-lg"><a href="/VideoMeet/createMeeting"><img src="/img/add-2.png" alt=""></a></div>
-        <div class="to-top hidden-sm hidden-xs" title="回到顶部"><img src="/img/to-top.png" alt=""></div>
+		<div class="add mobile-add hidden-md hidden-lg"><a href="/VideoMeet/createMeeting"><img src="/img/mobile-add.png" alt=""></a></div>
+        <div class="add pc-add hidden-xs hidden-sm" title="创建新事项"><a href="/VideoMeet/createMeeting"><img src="/img/pc-add.png" alt=""></a></div>
+        <div class="to-top hidden-sm hidden-xs" id="to-top" title="回到顶部"><img src="/img/to-top.png" alt=""></div>
 	</div>
 </body>
 <!-- <script src="/js/jquery-3.2.1.min.js"></script> -->

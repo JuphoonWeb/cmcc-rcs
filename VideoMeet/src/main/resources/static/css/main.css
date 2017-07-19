@@ -66,10 +66,15 @@ form{
 .item a{
 	color:rgb(133, 133, 133);
 }
-.add{
+.add.mobile-add{
 	position:fixed;
 	width:32px;height:32px;
 	right:30px;bottom:40px;
+}
+.add.pc-add{
+	position:fixed;
+	width:64px;height:64px;
+	right:5%;bottom:50px;
 }
 .add a{
 	width:100%;
