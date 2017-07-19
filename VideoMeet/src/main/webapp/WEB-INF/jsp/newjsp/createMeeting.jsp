@@ -204,15 +204,12 @@
 		$(this).hide();
 		$('#add-partner').hide();
 		$('#complete').show();
-		for(img in $('.partner-head')){
-            $('.partner-head')[img].src='/img/do-delete.png';
+		$('.delete-sup').show();
 
-		}
 	});
 	$('#complete').click(function(){
 		delSwitch=false;
 		$('.partner').removeClass('swing');
-		$('.do-delete').hide();
 		$(this).hide();
 		$('#add-partner').show();
 		$('#delete').show();
@@ -220,7 +217,7 @@
             $('.partner-head')[img].src='/img/partner.png';
 		}
 	});
-	$(document).on("click", '#partner', function() {
+	$(document).on("click", '#partner,.delete-sup', function() {
   		if(delSwitch){
 				console.log($(this));
 				$('#partner-num').val(getPatnerNumber()-1);
@@ -328,6 +325,7 @@
 		$('#add-popup-container').hide();
 	})
 	$('#add-ok').click(function(){
+        $('#add-popup-container').hide();
 		if($('#add-name').val()===""){
 			alert('请输入姓名');
 		}else if($('#add-phone').val()===""){
