@@ -138,13 +138,13 @@
 	<div class="add-popup-container" id="add-popup-container">
 		<div class="add-popup-mask" id="add-popup-mask"></div>
 		<div class="add-popup" id="add-popup">
-			<form action="" novalidate onsubmit="false">
+			<form novalidate onsubmit="return false">
 					<legend>添加参与人员<span id="add-close" class="close">x</span></legend>
 					<input type="text" class="form-control" name="name" id="add-name" placeholder="请输入姓名" required>
 					<input type="text" class="form-control" name="phone" id="add-phone" placeholder="请输入手机号码" required>
 				<div class="btn-group btn-group-justified">
 					<div class="btn-group">
-						<button type="submit" class="btn btn-ok" id="add-ok">确定</button>
+						<button class="btn btn-ok" id="add-ok">确定</button>
 					</div>
 					<div class="btn-group">
 						<button class="btn btn-default" id="add-cancel">取消</button>
@@ -161,6 +161,7 @@
 <script src="/js/jquery-3.2.1.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script>
 	//解决zepto与jQuery的冲突
@@ -189,7 +190,7 @@
 
  	 });
 
-
+	var currentPhone = '${currentPhone}'
 	var delSwitch=false;
 	function getPatnerNumber(){
 		return parseInt($('#partner-num').val());
@@ -203,21 +204,29 @@
 		$('.partner').addClass('swing');
 		$(this).hide();
 		$('#add-partner').hide();
+		$('.delete-sup').show();
 		$('#complete').show();
 		$('.delete-sup').show();
 
+//		for(img in $('.partner-head')){
+//            $('.partner-head')[img].src='/img/do-delete.png';
+//
+//		}
 	});
 	$('#complete').click(function(){
 		delSwitch=false;
 		$('.partner').removeClass('swing');
+//		$('.do-delete').hide();
 		$(this).hide();
 		$('#add-partner').show();
+        $('.delete-sup').hide();
 		$('#delete').show();
-		for(img in $('.partner-head')){
-            $('.partner-head')[img].src='/img/partner.png';
-		}
+//		for(img in $('.partner-head')){
+//            $('.partner-head')[img].src='/img/partner.png';
+//		}
 	});
-	$(document).on("click", '#partner,.delete-sup', function() {
+
+	$(document).on("click", '#partner', function() {
   		if(delSwitch){
 				console.log($(this));
 				$('#partner-num').val(getPatnerNumber()-1);
@@ -321,20 +330,37 @@
     	$('#add-popup-container').show();
     }
 
-    $(document).on('click','#add-popup-mask,#add-close',function(){
+    $(document).on('click','#add-popup-mask,#add-close,#add-cancel',function(){
 		$('#add-popup-container').hide();
 	})
-	$('#add-ok').click(function(){
+
+
+    $("#add-ok").click(function () {
+        var name = $("#add-name").val();
+        var phone = $("#add-phone").val();
+        if(name == "") {
+            dailog("姓名不能为空")
+			return;
+        }
+        if(phone == "") {
+            dailog("手机号不能为空")
+            return;
+        }
+        if(!(/^1[34578]\d{9}$/.test(phone))){
+            dailog("手机号格式不正确")
+            return;
+        }
+        var contact = {name:name, phone:phone};
+        $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
+            '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
+            '<img src="/img/partner.png" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
+
+        contactArray.push(contact);
+        $('#partner-num').val(1 + contactArray.length);
         $('#add-popup-container').hide();
-		if($('#add-name').val()===""){
-			alert('请输入姓名');
-		}else if($('#add-phone').val()===""){
-			alert('请输入手机号码');
-			$('#add-phone').focus();
-		}else{
-			$ajax({});
-		}
-	})
+        $("#add-name").val("");
+        $("#add-phone").val("");
+    });
 
 
     var contactArray = new Array();
@@ -346,8 +372,8 @@
         }
         phones.length = 0;//清空数组
         var json = eval('(' + jsonContactArray + ')');
-        var flag = true;
         for(var i=0; i < json.length; i++) {
+            var flag = true;
             for(var j =0; j<contactArray.length; j++) {
                 if(contactArray[j].name == json[i].name) {
                     flag = false;
@@ -359,9 +385,13 @@
             }
             contactArray.push(json[i]);
             phones.push(json[i]);
+            var name = json[i].name
+            if(json[i].name.length > 4)  {
+                name = json[i].name.substring(0,4);
+			}
             $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
             	'<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
-                '<img src="/img/partner.png" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+json[i].name+'</p></div>');
+                '<img src="/img/partner.png" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
         }
         $('#partner-num').val(1 + contactArray.length);
 
@@ -374,15 +404,15 @@
     var a
     //递归调用
     function setHeadRecursion(phone) {
-        a = Date.parse(new Date());
-        data = "/img/partner.png";// 没有头像的不走回调  初始化默认图片
+        data = "/img/partner.png";//初始化默认图片
         getHead(phone);
         setTimeout(function () {
             $("#" + phones[index].phone).attr("src", data);
+            data = "/img/partner.png";//初始化默认图片
             index ++;
             if(index <= phones.length)
                 setHeadRecursion(phones[index].phone)
-        }, 100)
+        }, 200)
 
     }
 
@@ -413,10 +443,10 @@
         //isSender = buttonName == "sendButton";
 
         if (!isAndroidInFeixin() && !isIOS()) {
-            $(document).dialog({
-                overlayClose: true,
-                content: '当前浏览器非安卓或者IOS',
-            });
+//            $(document).dialog({
+//                overlayClose: true,
+//                content: '当前浏览器非安卓或者IOS',
+//            });
             a();
         }
     }
