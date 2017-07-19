@@ -17,10 +17,14 @@
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/dialog.css">
 	<style>
-		.resend{
+		.join{
 			color:rgb(255,255,255);
 			background-color: rgb(0, 197, 195);
 		}
+		/*.resend{*/
+			/*color:rgb(255,255,255);*/
+			/*background-color: rgb(0, 197, 195);*/
+		/*}*/
 		.partner{
 			margin-top: 30px;
 		}
@@ -51,11 +55,11 @@
 	</table>
 	<div class="btn-group btn-group-justified">
 		<div class="btn-group">
-			<button id="joinMeetBtn" class="btn btn-primary join">加入会议</button>
+			<button id="joinMeetBtn" class="btn join">加入会议</button>
 		</div>
 		<div class="btn-group">
 
-			<button id="notifyMeetBtn" class="btn resend">重新发送通知</button>
+			<button id="notifyMeetBtn" class="btn btn-default resend">重新发送通知</button>
 		</div>
 	</div>
 
@@ -66,6 +70,10 @@
 		</div>
 
 	</div>
+
+		<div class="add add-partner mobile-add hidden-md hidden-lg"><a href="#"><img src="/img/mobile-add.png" alt=""></a></div>
+		<div class="add add-partner pc-add hidden-xs hidden-sm" title="创建新事项"><a href="#"><img src="/img/pc-add.png" alt=""></a></div>
+
 
 	<%--<div class="add hidden-md hidden-lg"><a href="createMeeting.jsp"><img src="/img/add-2.png" alt=""></a></div>--%>
 </div>
@@ -117,15 +125,17 @@
         // }
         //if (isChairman == '1')
         // {
-        $(joinMeetBtn).css("margin-left","8.333333%");
+//        $(joinMeetBtn).css("margin-left","8.333333%");
         notifyMeetBtn.addEventListener("click", function () {
             sendMeetNotify();
         });
     }
     else
     {
-        $(notifyMeetBtn).hide();
-        $(joinMeetBtn).css("margin-left","29.166666%");
+        $(notifyMeetBtn).parent().hide();
+        $(joinMeetBtn).addClass("btn-block");
+        $(joinMeetBtn).parent().removeClass("btn-group");
+        $(".add").hide();
     }
 
 
@@ -174,6 +184,58 @@
             }
         });
     }
+
+	//新增联系人到会议
+    $('.add-partner').click(function(){
+        if(isIOSInFeixin()){
+            navigator.WebContainer.selectEnterpriseContactMulti("选择","16","backADD", "addContactToList", "");
+        }else if(isAndroidInFeixin()){
+            window.WebContainer.selectEnterpriseContactMulti("选择","16","backADD", "addContactToList", "");
+        }
+    });
+    function addContactToList(jsonType,jsonContactArray) {
+        if (jsonContactArray == undefined || jsonContactArray == "") {
+            window.location = 'error.jsp';
+        }
+
+        var json=JSON.parse(jsonContactArray);
+        $(document).dialog({
+			type:'confirm',
+			content:'确定添加所选联系人到会议？',
+			onClickConfirmBtn:function(){
+
+                <%--updateVideoMeet(${videoMeetInfo.meetId},jsonContactArray);--%>
+				$.ajax({
+					type:'post',
+					url:'/VideoMeet/updateVideoMeet/${videoMeetInfo.meetId}',
+					dataType:'json',
+					data:{
+                        members:jsonContactArray,
+					},
+					success:function(data){
+                        $("#demo").children().remove();
+					    var json=JSON.parse(data.members);
+					    var txt='';
+                        for (var i = 0; i < json.length; i++)
+                        {
+                            txt+='<a class="list-group-item">'+json[i].name+'</a>';
+                        }
+                        $("#demo").append(txt);
+					},
+                    error : function(data){
+                        $(document).dialog({
+                            overlayClose: true,
+                            content: "服务器异常\n" + data.responseText,
+                        });
+                    }
+				})
+
+			}
+		})
+
+
+    }
+
 </script>
 </body>
 </html>
