@@ -16,14 +16,14 @@
             background-color: rgb(0, 197, 195);
         }
         .unread-icon-xs{
-            position:relative;
+            position:absolute;
             top:-22px;
-            right:0px;
+            right:-4px;
         }
         .unread-icon-md{
-            position:relative;
-            top:-27px;
-            right:15px   
+            position:absolute;
+            top:-28px;
+            right:-7px;
         }
 
         .pc-tab .badge{
@@ -67,7 +67,7 @@
 			<div class="list list-2 text-left animated">
             </div>
 		</div>
-		<div class="add mobile-add hidden-md hidden-lg"><a href="/VideoMeet/createMeeting"><img src="/img/mobile-add.png" alt=""></a></div>
+		<div class="add mobile-add hidden-md hidden-lg"><a href="/VideoMeet/createMeeting"><img src="/img/mobile-add.svg" alt=""></a></div>
         <div class="add pc-add hidden-xs hidden-sm" title="创建新事项"><a href="/VideoMeet/createMeeting"><img src="/img/pc-add.png" alt=""></a></div>
         <div class="to-top hidden-sm hidden-xs" id="to-top" title="回到顶部"><img src="/img/to-top.png" alt=""></div>
 	</div>
@@ -226,7 +226,7 @@
                                 if(obj.videoMeetInfoList[i].isRead == 1) {
                                     isRead = 'style="display:none;"';
                                 }
-                                result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" '+ isRead+' src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png"  '+ isRead+' alt=""></div></div></a></div>';
+                                result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" '+ isRead+' src="/img/unread-xs.svg" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png"  '+ isRead+' alt=""></div></div></a></div>';
                             }
                         } else {
                             tab2LoadEnd = true;

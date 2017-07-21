@@ -21,16 +21,18 @@
 			color:rgb(255,255,255);
 			background-color: rgb(0, 197, 195);
 		}
-		/*.resend{*/
-			/*color:rgb(255,255,255);*/
-			/*background-color: rgb(0, 197, 195);*/
-		/*}*/
 		.partner{
 			margin-top: 30px;
 		}
 		.partner a:hover{
 			background-color: rgb(234,234,234);
 		}
+        @media(min-width: 992px){
+            .meeting-detail-container{
+                width:70%;
+                margin:50px auto;
+            }
+        }
 
 	</style>
 
@@ -38,45 +40,47 @@
 <body>
     <div class="head-bar text-center hidden-xs hidden-sm">会议详情</div>
     <div class="container">
-	<table class="detail table">
-		<tr>
-			<th>会议ID</th><td> ${videoMeetInfo.meetId}</td>
-		</tr>
-		<tr>
-			<th>会议主题</th><td> ${videoMeetInfo.meetSubject}</td>
-		</tr>
-		<tr>
-			<th>发起人</th><td>${videoMeetInfo.chairmanName}</td>
-		</tr>
-		<tr>
-			<th>会议时间</th><td>${videoMeetInfo.meetDatetime}</td>
-		</tr>
+        <div class="meeting-detail-container">	
+            <table class="detail table">
+        		<tr>
+        			<th>会议ID</th><td> ${videoMeetInfo.meetId}</td>
+        		</tr>
+        		<tr>
+        			<th>会议主题</th><td> ${videoMeetInfo.meetSubject}</td>
+        		</tr>
+        		<tr>
+        			<th>发起人</th><td>${videoMeetInfo.chairmanName}</td>
+        		</tr>
+        		<tr>
+        			<th>会议时间</th><td>${videoMeetInfo.meetDatetime}</td>
+        		</tr>
 
-	</table>
-	<div class="btn-group btn-group-justified">
-		<div class="btn-group">
-			<button id="joinMeetBtn" class="btn join">加入会议</button>
-		</div>
-		<div class="btn-group">
+        	</table>
+        	<div class="btn-group btn-group-justified">
+        		<div class="btn-group">
+        			<button id="joinMeetBtn" class="btn join">加入会议</button>
+        		</div>
+        		<div class="btn-group">
+        			<button id="notifyMeetBtn" class="btn btn-default resend">重新发送通知</button>
+        		</div>
+        	</div>
 
-			<button id="notifyMeetBtn" class="btn btn-default resend">重新发送通知</button>
-		</div>
-	</div>
+        	<div class="partner list-group">
+        		<b>成员列表</b>
+        		<!--<a class="list-group-item">${videoMeetInfo.members}.toString</a> -->
+        		<div id="demo">
+        		</div>
 
-	<div class="partner list-group">
-		<b>成员列表</b>
-		<!--<a class="list-group-item">${videoMeetInfo.members}.toString</a> -->
-		<div id="demo">
-		</div>
+        	</div>
 
-	</div>
-
-		<div class="add add-partner mobile-add hidden-md hidden-lg"><a href="#"><img src="/img/mobile-add.png" alt=""></a></div>
-		<div class="add add-partner pc-add hidden-xs hidden-sm" title="创建新事项"><a href="#"><img src="/img/pc-add.png" alt=""></a></div>
-
-
-	<%--<div class="add hidden-md hidden-lg"><a href="createMeeting.jsp"><img src="/img/add-2.png" alt=""></a></div>--%>
-</div>
+    		<div class="add add-partner mobile-add hidden-md hidden-lg">
+                <a href="#"><img src="/img/mobile-add.svg" alt=""></a>
+            </div>
+    		<div class="add add-partner pc-add hidden-xs hidden-sm" title="添加联系人到会议">
+                <a href="#"><img src="/img/pc-add.png" alt=""></a>
+            </div>
+	    </div>
+    </div>
 
 <script type="text/javascript" src="/js/index.js"></script>
 
@@ -188,7 +192,7 @@
 	//新增联系人到会议
     $('.add-partner').click(function(){
         if(isIOSInFeixin()){
-            navigator.WebContainer.selectEnterpriseContactMulti("选择","16","backADD", "addContactToList", "");
+            navigator.WebContainer.selectEnterpriseContactMulti("选择","16","backADD", "addContactToList","");
         }else if(isAndroidInFeixin()){
             window.WebContainer.selectEnterpriseContactMulti("选择","16","backADD", "addContactToList", "");
         }
@@ -198,11 +202,33 @@
             window.location = 'error.jsp';
         }
 
-        var json=JSON.parse(jsonContactArray);
-        $(document).dialog({
-			type:'confirm',
-			content:'确定添加所选联系人到会议？',
-			onClickConfirmBtn:function(){
+        //检测所选联系人是否已在列表中
+        var contactArray=JSON.parse(jsonContactArray);
+        var currentMembersArray = $('#demo').children();
+		var newContactArray=[];
+		var flag=true;
+		for(var i=0;i<contactArray.length;i++){
+		    flag=true;
+		    for(var j=0;j<currentMembersArray.length;j++){
+		        if(contactArray[i].name===currentMembersArray[j].text){
+		            flag=false;
+		            break;
+				}
+			}
+			if(!flag){
+		        continue;
+			}
+			newContactArray.push(contactArray[i]);
+		}
+		if(newContactArray.length===0){
+            dailog('所选联系人已在当前列表中');
+			return;
+		}else{
+
+        	$(document).dialog({
+				type:'confirm',
+				content:'确定添加所选联系人到会议？',
+				onClickConfirmBtn:function(){
 
                 <%--updateVideoMeet(${videoMeetInfo.meetId},jsonContactArray);--%>
 				$.ajax({
@@ -210,15 +236,15 @@
 					url:'/VideoMeet/updateVideoMeet/${videoMeetInfo.meetId}',
 					dataType:'json',
 					data:{
-                        members:jsonContactArray,
+                        members:JSON.stringify(newContactArray),
 					},
 					success:function(data){
                         $("#demo").children().remove();
-					    var json=JSON.parse(data.members);
+					    var jsonObj=JSON.parse(data.members);
 					    var txt='';
-                        for (var i = 0; i < json.length; i++)
+                        for (var i = 0; i < jsonObj.length; i++)
                         {
-                            txt+='<a class="list-group-item">'+json[i].name+'</a>';
+                            txt+='<a class="list-group-item">'+jsonObj[i].name+'</a>';
                         }
                         $("#demo").append(txt);
 					},
@@ -232,6 +258,7 @@
 
 			}
 		})
+		}
 
 
     }

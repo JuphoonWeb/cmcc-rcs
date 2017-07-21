@@ -16,18 +16,21 @@
 			border:none;
 		}
 		.sponsor{
-			color:rgb(18, 150, 219);
+			color:rgb(22, 78, 207);
 		}
 		.partner{
-			color:rgb(19, 34, 122);
+			/*color:rgb(19, 34, 122);*/
 			animation-timing-function:linear;
 			animation-iteration-count: infinite;
 		}
+		 .add-delete-container p,.add-delete-container img{
+			cursor:pointer;
+		}
 		.add-partner{
-			color:rgb(26, 250, 41);
+			color:rgb(60,241,60);
 		}
 		.delete{
-			color:rgb(233, 143, 54);
+			color:rgb(255, 116, 0);
 		}
 		.delete-sup{
 			 position: absolute;
@@ -82,6 +85,9 @@
 		.add-popup-container .add-tip{
 			display:none;
 		}
+		/*.delete{*/
+			/*display:none;*/
+		/*}*/
 	</style>
 </head>
 <body>
@@ -94,7 +100,7 @@
 				name="title" id="title" required placeholder="请输入会议主题">
 			</div>
 			<div class="form-group">
-				<label for="">会议时间</label>
+				<label>会议时间</label>
 				<input class="form-control text-left datetime hidden-md hidden-lg" id="datetime" name="datetime" required placeholder="请选择会议时间">
 				<input type="button" class="form-control text-left datetimepicker hidden-sm hidden-xs" id="datetimepicker" name="datetime" required value="请选择会议时间">
 			</div>
@@ -110,29 +116,29 @@
 
 				<div class="row">
 					<div class="sponsor col-xs-3 text-center center-block">
-						<img src="/img/sponsor.png" alt="" class="">
+						<img src="/img/sponsor.svg" alt="" class="">
 						<p>我</p>
 					</div>
 					<div class="partner-list"></div>
-					<div class="add-partner col-xs-3 text-center center-block" id="add-partner">
-						<img src="/img/add.png" alt="" class="">
-						<p>添加</p>
+
+					<div class="add-delete-container">
+						<div class="add-partner col-xs-3 text-center center-block" id="add-partner">
+							<img src="/img/add.svg" alt="" class="">
+							<p>添加</p>
+						</div>
+						<div class="delete col-xs-3 text-center center-block" id="delete">
+							<img src="/img/delete.svg" alt="" class="">
+							<p>删除</p>
+						</div>
+						<div class="complete col-xs-3 text-center center-block" id="complete">
+							<img src="/img/complete.svg" alt="" class="">
+							<p>完成</p>
+						</div>
 					</div>
-					<div class="delete col-xs-3 text-center center-block" id="delete">
-						<img src="/img/delete.png" alt="" class="">
-						<p>删除</p>
-					</div>
-					<div class="complete col-xs-3 text-center center-block" id="complete">
-						<img src="/img/complete.png" alt="" class="">
-						<p>完成</p>
-					</div>
-					
 				</div>
 			</div>
-			<div class="btn-group btn-block">
-				<button type="submit" id="create" class="btn btn-ok btn-block">创建</button>
-				<button type="cancel" id="cancel" class="btn btn-default btn-block">取消</button>
-			</div>
+			<button type="submit" id="create" class="btn btn-ok btn-block">创建</button>
+			<button type="cancel" id="cancel" class="btn btn-default btn-block">取消</button>
 		</form>
 	</div>
 	<div class="add-popup-container" id="add-popup-container">
@@ -228,19 +234,10 @@
 				console.log($(this));
 				$('#partner-num').val(getPatnerNumber()-1);
 				$(this).hide();
-				$(this).remove();
-            	var html = $(this).find('p').html();
-            	var num;
-				for(var i=0; contactArray.length; i++) {
-				    if(contactArray[i].name == html) {
-				        num = i;
-				        break;
-					}
-				}
-				contactArray.splice(num, 1);
-//            for(var i=0; contactArray.length; i++) {
-//                alert(contactArray[i].name)
-//            }
+
+//				alert($(this).index());
+				contactArray.splice($('.partner').index($(this)), 1);
+            	$(this).remove();
         }
     });
 
@@ -349,8 +346,8 @@
         }
         var contact = {name:name, phone:phone};
         $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-            '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
-            '<img src="/img/partner.png" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
+            '<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
+            '<img src="/img/partner.svg" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
 
         contactArray.push(contact);
         $('#partner-num').val(1 + contactArray.length);
@@ -377,8 +374,8 @@
         }
         var contact = {name:name, phone:phone};
         $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-            '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
-            '<img src="/img/partner.png" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
+            '<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
+            '<img src="/img/partner.svg" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
 
         contactArray.push(contact);
         $('#partner-num').val(1 + contactArray.length);
@@ -415,8 +412,8 @@
                 name = json[i].name.substring(0,4);
 			}
             $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-            	'<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
-                '<img src="/img/partner.png" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
+            	'<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
+                '<img src="/img/partner.svg" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
         }
         $('#partner-num').val(1 + contactArray.length);
 
@@ -429,11 +426,11 @@
     var a
     //递归调用
     function setHeadRecursion(phone) {
-        data = "/img/partner.png";//初始化默认图片
+        data = "/img/partner.svg";//初始化默认图片
         getHead(phone);
         setTimeout(function () {
             $("#" + phones[index].phone).attr("src", data);
-            data = "/img/partner.png";//初始化默认图片
+            data = "/img/partner.svg";//初始化默认图片
             index ++;
             if(index <= phones.length)
                 setHeadRecursion(phones[index].phone)
@@ -458,7 +455,7 @@
         if(json.status == "1") {
             data = "data:image/jpeg;base64,"+json.avatar;
 		} else {
-            data = "/img/partner.png";
+            data = "/img/partner.svg";
 		}
 
     }
