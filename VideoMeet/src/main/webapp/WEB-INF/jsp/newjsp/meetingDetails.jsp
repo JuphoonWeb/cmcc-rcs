@@ -27,6 +27,33 @@
 		.partner a:hover{
 			background-color: rgb(234,234,234);
 		}
+		.bottom-menu-container{
+			display: none;
+		}
+		.bottom-menu-mask{
+			position:absolute;
+			left:0;top:0;
+			width:100%;height:100%;
+			z-index:99;
+			background-color: rgba(0,0,0,.3);
+		}
+		.bottom-menu{
+			position:absolute;
+			width:100%;
+			bottom:0px;left:0;
+			margin:0;
+			z-index:100;
+		}
+		.glyphicon-option-vertical,.bottom-menu li{
+			cursor: pointer;
+		}
+		.bottom-menu li:hover{
+			background-color: rgb(234,234,234);
+		}
+
+		a{
+			color:rgb(0,0,0);
+		}
         @media(min-width: 992px){
             .meeting-detail-container{
                 width:70%;
@@ -81,6 +108,12 @@
             </div>
 	    </div>
     </div>
+	<div class="bottom-menu-container" id="bottom-menu-container">
+		<div class="bottom-menu-mask" id="bottom-menu-mask"></div>
+			<ul class="bottom-menu list-group" id="bottom-menu">
+				<li class="list-group-item delete" id="delete">删除</li>
+			</ul>
+	</div>
 
 <script type="text/javascript" src="/js/index.js"></script>
 
@@ -90,7 +123,8 @@
     var txt='';
     for (var index = 0; index < membersJsonArray.length; index++)
     {
-        txt+='<a class="list-group-item">'+membersJsonArray[index].name+'</a>';
+//        txt+='<a class="list-group-item">'+membersJsonArray[index].name+'</a>';
+        txt+='<div class="list-group-item"> <a href="">'+membersJsonArray[index].name+'</a> <span class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
     }
     $("#demo").append(txt);
 </script>
@@ -239,12 +273,14 @@
                         members:JSON.stringify(newContactArray),
 					},
 					success:function(data){
+					    alert(data.members);
                         $("#demo").children().remove();
 					    var jsonObj=JSON.parse(data.members);
 					    var txt='';
                         for (var i = 0; i < jsonObj.length; i++)
                         {
-                            txt+='<a class="list-group-item">'+jsonObj[i].name+'</a>';
+//                            txt+='<a class="list-group-item">'+jsonObj[i].name+'</a>';
+                            txt+='<div class="list-group-item"> <a href="">'+jsonObj[i].name+'</a> <span id="test" class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
                         }
                         $("#demo").append(txt);
 					},
@@ -259,9 +295,29 @@
 			}
 		})
 		}
-
-
     }
+
+    //成员列表右侧三点菜单按钮逻辑
+    $(document).on('click','#option-vertical',function(){
+        var currentItem=$(this).parent();
+        $('#bottom-menu-container').show();
+        $('#delete').on('click',function(){
+            $('#bottom-menu-container').hide();
+            $(document).dialog({
+                type : 'confirm',
+				overlayClose:true,
+                content: '确定将该联系人从会议中删除吗？',
+				onClickConfirmBtn:function(){
+					currentItem.remove();
+				}
+            });
+            $('#delete').off();
+		})
+        $('#bottom-menu-mask').on('click',function(){
+            $('#bottom-menu-container').hide();
+            $('#delete').off();
+        })
+    })
 
 </script>
 </body>
