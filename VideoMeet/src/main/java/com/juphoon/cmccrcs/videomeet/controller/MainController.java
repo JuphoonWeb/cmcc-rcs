@@ -73,6 +73,17 @@ public class MainController {
         return "error";
     }
 
+
+
+
+    @RequestMapping(value="/error11")
+    public String demo11(Model model)
+    {
+        model.addAttribute("phone","currentPhone");
+        return "newjsp/error1";
+    }
+
+
     @RequestMapping(value="/videoMeetList/{currentPhone}", method = RequestMethod.GET)
     public String videoMeetListWithPhone(HttpSession httpSession, Model model, @PathVariable String currentPhone) {
         model.addAttribute("currentPhone", currentPhone);
