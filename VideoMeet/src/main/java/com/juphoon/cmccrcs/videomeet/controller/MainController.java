@@ -47,6 +47,9 @@ public class MainController {
     @Autowired
     private RcsMsgService rcsMsgService;
 
+//    private static String MEET_URL = "http://120.27.131.68:8086/";
+    private static String MEET_URL = "http://122.227.209.194:8086/";
+
     @RequestMapping("/index")
     public String index(HttpServletRequest request, Model model) {
         Enumeration<String> headerNames = request.getHeaderNames();
@@ -253,6 +256,9 @@ public class MainController {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String meetDateTime = format.format(new Date());
+        if(StringUtils.isEmpty(chairmanName)) {
+            chairmanName = chairmanPhone;
+        }
         VideoMeetInfo videoMeetInfo = new VideoMeetInfo(meetSubject, chairmanName, chairmanPhone, chairmanInfo, meetDateTime, members);
         int result = videoMeetInfoService.saveVideoMeetInfo(videoMeetInfo);
         if (result <= 0) {
@@ -365,7 +371,7 @@ public class MainController {
         final String summary = "会议ID：" + videoMeetInfo.getMeetId() + "\r\n" +
                 "会议时间：" + videoMeetInfo.getMeetDatetime() + "\r\n" +
                 "会议发起人：" + videoMeetInfo.getChairmanName() + " " + videoMeetInfo.getChairmanPhone()+"\r\n";
-        final String redirectUrl = "http://120.27.131.68:8086/VideoMeet/showVideoMeetInfoDetail/"+videoMeetInfo.getMeetId()+"?currentPhone=";
+        final String redirectUrl = MEET_URL + "VideoMeet/showVideoMeetInfoDetail/"+videoMeetInfo.getMeetId()+"?currentPhone=";
         final String senderNumber = videoMeetInfo.getChairmanPhone();
         new Thread(new Runnable() {
             @Override

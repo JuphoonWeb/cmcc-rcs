@@ -196,7 +196,7 @@
 
  	 });
 
-	var currentPhone = '${currentPhone}'
+	var currentPhone = '${currentPhone}';
 	var delSwitch=false;
 	function getPatnerNumber(){
 		return parseInt($('#partner-num').val());
@@ -235,9 +235,22 @@
 				$('#partner-num').val(getPatnerNumber()-1);
 				$(this).hide();
 
+
 //				alert($(this).index());
-				contactArray.splice($('.partner').index($(this)), 1);
+//				contactArray.splice($('.partner').index($(this)), 1);
             	$(this).remove();
+            	var html = $(this).find('p').attr("id");
+            	var num;
+				for(var i=0; contactArray.length; i++) {
+				    if(contactArray[i].name == html) {
+				        num = i;
+				        break;
+					}
+				}
+				contactArray.splice(num, 1);
+//            for(var i=0; contactArray.length; i++) {
+//                alert(contactArray[i].name)
+//            }
         }
     });
 
@@ -259,7 +272,7 @@
         if(contentText != ""){
             $(document).dialog({
                 overlayClose: true,
-                content: contentText,
+                content: contentText
             });
             return;
         }
@@ -280,14 +293,14 @@
                 } else {
                     $(document).dialog({
                         overlayClose: true,
-                        content: '创建会议失败',
+                        content: '创建会议失败'
                     });
                 }
             },
             error : function(data){
                 $(document).dialog({
                     overlayClose: true,
-                    content: "服务器异常/n" + data.responseText,
+                    content: "服务器异常/n" + data.responseText
                 });
             }
         });
@@ -310,10 +323,11 @@
 //        rcsContactGeneralSelector();
     }
     function selectEnterpriseContactMulti(){
+        var max = 16 - getPatnerNumber();
         if(isIOSInFeixin()){
-            navigator.WebContainer.selectEnterpriseContactMulti("多方视频会议","16","backID", "createMeetSubject", "");
+            navigator.WebContainer.selectEnterpriseContactMulti("多方视频会议", max,"backID", "createMeetSubject", "");
         }else if(isAndroidInFeixin()){
-            window.WebContainer.selectEnterpriseContactMulti("多方视频会议","16","backID", "createMeetSubject", "");
+            window.WebContainer.selectEnterpriseContactMulti("多方视频会议", max,"backID", "createMeetSubject", "");
         }else{
             createMeetSubjectInPC();
         }
@@ -328,13 +342,12 @@
 		$('#add-popup-container').hide();
 	})
 
-
     $("#add-ok").click(function () {
         var name = $("#add-name").val();
         var phone = $("#add-phone").val();
         if(name == "") {
             dailog("姓名不能为空")
-			return;
+            return;
         }
         if(phone == "") {
             dailog("手机号不能为空")
@@ -346,39 +359,17 @@
         }
         var contact = {name:name, phone:phone};
         $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-            '<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
-            '<img src="/img/partner.svg" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
+            '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
+            '<img src="/img/partner.png" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p id="'+ name+'">'+name+'</p></div>');
 
-        contactArray.push(contact);
         $('#partner-num').val(1 + contactArray.length);
-        $('#add-popup-container').hide();
-        $("#add-name").val("");
-        $("#add-phone").val("");
-    });
-
-
-    $("#add-ok").click(function () {
-        var name = $("#add-name").val();
-        var phone = $("#add-phone").val();
-        if(name == "") {
-            dailog("姓名不能为空")
-			return;
-        }
-        if(phone == "") {
-            dailog("手机号不能为空")
+        if(getPatnerNumber() > 16) {
+            dailog("超过最大会议人数");
             return;
         }
-        if(!(/^1[34578]\d{9}$/.test(phone))){
-            dailog("手机号格式不正确")
-            return;
-        }
-        var contact = {name:name, phone:phone};
-        $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-            '<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
-            '<img src="/img/partner.svg" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
 
         contactArray.push(contact);
-        $('#partner-num').val(1 + contactArray.length);
+
         $('#add-popup-container').hide();
         $("#add-name").val("");
         $("#add-phone").val("");
@@ -412,8 +403,8 @@
                 name = json[i].name.substring(0,4);
 			}
             $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-            	'<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
-                '<img src="/img/partner.svg" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p>'+name+'</p></div>');
+                '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
+                '<img src="/img/partner.png" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p id="'+ json[i].name+'">'+name+'</p></div>');
         }
         $('#partner-num').val(1 + contactArray.length);
 
@@ -423,16 +414,17 @@
 		}
     }
 
-    var a
+    var a = "";
     //递归调用
     function setHeadRecursion(phone) {
         data = "/img/partner.svg";//初始化默认图片
         getHead(phone);
         setTimeout(function () {
+            a = a + "  " + index + "  " + data;
             $("#" + phones[index].phone).attr("src", data);
             data = "/img/partner.svg";//初始化默认图片
             index ++;
-            if(index <= phones.length)
+            if(index < phones.length)
                 setHeadRecursion(phones[index].phone)
         }, 200)
 
