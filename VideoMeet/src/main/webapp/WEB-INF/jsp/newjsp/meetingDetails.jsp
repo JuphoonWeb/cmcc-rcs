@@ -16,44 +16,87 @@
 	<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/dialog.css">
+    <link rel="stylesheet" href="/css/date-time-picker.min.css">
+
 	<style>
 		.join{
-			color:rgb(255,255,255);
-			background-color: rgb(0, 197, 195);
-		}
-		.partner{
-			margin-top: 30px;
-		}
-		.partner a:hover{
-			background-color: rgb(234,234,234);
-		}
-		.bottom-menu-container{
-			display: none;
-		}
-		.bottom-menu-mask{
-			position:absolute;
-			left:0;top:0;
-			width:100%;height:100%;
-			z-index:99;
-			background-color: rgba(0,0,0,.3);
-		}
-		.bottom-menu{
-			position:absolute;
-			width:100%;
-			bottom:0px;left:0;
-			margin:0;
-			z-index:100;
-		}
-		.glyphicon-option-vertical,.bottom-menu li{
-			cursor: pointer;
-		}
-		.bottom-menu li:hover{
-			background-color: rgb(234,234,234);
-		}
+            color:rgb(255,255,255);
+            background-color: rgb(0, 197, 195);
+        }
+        .partner{
+            margin-top: 30px;
+        }
+        .partner a:hover{
+            background-color: rgb(234,234,234);
+        }
+        
+        .mini-menu-container{
+            display: none;
+        }
+        .mini-menu-mask{
+            position: absolute;
+            top:0;left:0;
+            width: 100%;height:100%;
+            z-index:99;
+        }
+        .mini-menu{
+            position:absolute;
+            right:30px;bottom:50px;
+            z-index: 100;
+        }
+        .mini-menu li{
+            color:white;
+            background-color: rgb(51, 122, 183);
+        }
+        .bottom-menu-container{
+            display: none;
+        }
+        .bottom-menu-mask{
+            position:absolute;
+            left:0;top:0;
+            width:100%;height:100%;
+            z-index:99;
+            background-color: rgba(0,0,0,.3);
+        }
+        .bottom-menu{
+            position:absolute;
+            width:100%;
+            bottom:0px;left:0;
+            margin:0;
+            z-index:100;
+        }
+        .glyphicon-option-vertical,.bottom-menu li{
+            cursor: pointer;
+        }
+        .bottom-menu li:hover{
+            background-color: rgb(234,234,234);
+        }        
+        a{
+            color:rgb(0,0,0);
+        }
+        
+        .rotate{
+            animation:rotate .2s linear;
+        }
+        @keyframes rotate{
+            from{
+                transform: rotate(0deg);
+            }
+            to{
+                transform: rotate(90deg);
+            }
+        }
 
-		a{
-			color:rgb(0,0,0);
-		}
+        /* 解决date-time-picker与bootstrap的冲突 */
+        .date-picker-days-title i,.picker-row i{
+            display: inline-block;
+            height:24px;
+        }
+        /* 使得弹窗主题色与应用主题色一致 */
+        div.picker-head,i.picker-active span{
+            background-color: rgb(0, 197, 195);
+        }
+
         @media(min-width: 992px){
             .meeting-detail-container{
                 width:70%;
@@ -79,8 +122,12 @@
         			<th>发起人</th><td>${videoMeetInfo.chairmanName}</td>
         		</tr>
         		<tr>
-        			<th>会议时间</th><td>${videoMeetInfo.meetDatetime}</td>
+        			<th>开始时间</th><td id="begin-datetime">${videoMeetInfo.meetDatetime}</td>
         		</tr>
+                <tr>
+                    <th>结束时间</th><td id="end-datetime">2017-07-27 11:49:35</td>
+                </tr>
+
 
         	</table>
         	<div class="btn-group btn-group-justified">
@@ -100,14 +147,24 @@
 
         	</div>
 
-    		<div class="add add-partner mobile-add hidden-md hidden-lg">
+    		<div class="add mobile-add hidden-md hidden-lg">
                 <a href="#"><img src="/img/mobile-add.svg" alt=""></a>
             </div>
-    		<div class="add add-partner pc-add hidden-xs hidden-sm" title="添加联系人到会议">
+    		<div class="add pc-add hidden-xs hidden-sm" title="添加联系人到会议">
                 <a href="#"><img src="/img/pc-add.png" alt=""></a>
             </div>
 	    </div>
     </div>
+    
+    <div class="mini-menu-container" id="mini-menu-container">
+        <div class="mini-menu-mask" id="mini-menu-mask"></div>
+        <ul class="list-group mini-menu ">
+            <li class="list-group-item add-partner" id="add-partner">添加会议成员</li>
+            <li class="list-group-item change-end-time" id="change-end-time">更改结束时间</li>
+        </ul>
+    </div>
+
+
 	<div class="bottom-menu-container" id="bottom-menu-container">
 		<div class="bottom-menu-mask" id="bottom-menu-mask"></div>
 			<ul class="bottom-menu list-group" id="bottom-menu">
@@ -116,7 +173,7 @@
 	</div>
 
 <script type="text/javascript" src="/js/index.js"></script>
-
+<script src="/js/date-time-picker.min.js"></script>
 <script type="text/javascript">
     var szJsonStr = '<s:property escapeJavaScript="false" escape="false" value="sendCommandList" />';
     var membersJsonArray = ${videoMeetInfo.members};
@@ -223,9 +280,60 @@
             }
         });
     }
+    $('.add').click(function(){
+        $(this).addClass('rotate');
+        setTimeout(function(){$('#mini-menu-container').toggle()},200);
+        $(this).on('animationend',function(){
+            $(this).removeClass('rotate');
+        })
+        $('#mini-menu-mask').click(function(){
+            $('#mini-menu-container').hide();
+        })
+    })
+    $('#change-end-time').click(function(){
+        $('#mini-menu-container').hide();
+        var defaultTime=$('#begin-datetime').text();
+        var datePicker = new DateTimePicker.Date({
+            lang:'zh-CN',
+            formate:'yyyy-MM-dd',
+            default:defaultTime, 
+        })
+        datePicker.on('selected',function(formatDate){
+            var timePicker = new DateTimePicker.Time({
+                lang:'zh-CN',
+                formate:'HH:mm',
+                default:defaultTime,       
+            })
+            timePicker.on('selected',function(formatTime){
+                var endDatetime=formatDate+' '+formatTime+':00';
+                if(endDatetime <= $('#begin-datetime').text()){
+                    dailog('结束时间不能在开始时间之前，请重新选择');
+                }
+                $('#end-datetime').text(endDatetime);
+                $.ajax({
+                    type:'post',
+                    url:'/VideoMeet/delayEndMeetTime/${videoMeetInfo.meetId}',
+                    dataType:'json',
+                    data:{
+                        endDatetime:endDatetime,
+                    },
+                    success:function(data){
+                    },
+                    error:function(data){
+                        $(document).dialog({
+                        overlayClose: true,
+                        content: "服务器异常\n" + JSON.parse(data.responseText).status,
+                        });
+                    }
+
+                })
+            })
+        })
+
+    })
 
 	//新增联系人到会议
-    $('.add-partner').click(function(){
+    $('#add-partner').click(function(){
         if(isIOSInFeixin()){
             navigator.WebContainer.selectEnterpriseContactMulti("选择","16","backADD", "addContactToList","");
         }else if(isAndroidInFeixin()){
@@ -308,26 +416,25 @@
 				overlayClose:true,
                 content: '确定将该联系人从会议中删除吗？',
 				onClickConfirmBtn:function(){
-					members=${videoMeetInfo.members};
 					var index=currentItem.index();
 					$.ajax({
 						type:'post',
 						url:'/VideoMeet/deleteByMeetIdAndMemberPhone/${videoMeetInfo.meetId}',
 						dataType:'json',
                         data:{
-                            phone:members[index].phone,
+                            phone:${videoMeetInfo.members}[index].phone,
                         },
-						success:function(){
-							currentItem.remove();
-						},
-						error:function(data){
-                            $(document).dialog({
-                                overlayClose: true,
-                                content: "服务器异常\n" + JSON.parse(data.responseText).status,
-                            });
-						}
-					})
-				}
+						success:function(data){
+							currentItem.hide();
+    						},
+    						error:function(data){
+                                $(document).dialog({
+                                    overlayClose: true,
+                                    content: "服务器异常\n" + JSON.parse(data.responseText).status,
+                                });
+    						}
+    					})
+    				}
             });
             $('#delete').off();
 		})

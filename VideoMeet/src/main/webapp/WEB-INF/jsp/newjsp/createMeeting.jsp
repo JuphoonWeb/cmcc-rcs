@@ -85,6 +85,16 @@
 		.add-popup-container .add-tip{
 			display:none;
 		}
+
+		/* 解决date-time-picker与bootstrap的冲突 */
+        .date-picker-days-title i,.picker-row i{
+            display: inline-block;
+            height:24px;
+        }
+        /* 使得弹窗主题色与应用主题色一致 */
+        div.picker-head,i.picker-active span{
+            background-color: rgb(0, 197, 195);
+        }
 		/*.delete{*/
 			/*display:none;*/
 		/*}*/
@@ -100,9 +110,14 @@
 				name="title" id="title" required placeholder="请输入会议主题">
 			</div>
 			<div class="form-group">
-				<label>会议时间</label>
-				<input class="form-control text-left datetime hidden-md hidden-lg" id="datetime" name="datetime" required placeholder="请选择会议时间">
-				<input type="button" class="form-control text-left datetimepicker hidden-sm hidden-xs" id="datetimepicker" name="datetime" required value="请选择会议时间">
+				<label>开始时间</label>
+				<input class="form-control text-left begin-datetime hidden-md hidden-lg" id="begin-datetime" name="begin-datetime" required placeholder="请选择开始时间">
+				<input type="button" class="form-control text-left datetimepicker hidden-sm hidden-xs" id="begin-datetimepicker" name="begin-datetime" required value="请选择开始时间">
+			</div>
+			<div class="form-group">
+				<label>结束时间</label>
+				<input class="form-control text-left end-datetime hidden-md hidden-lg" id="end-datetime" name="end-datetime" required placeholder="请选择结束时间">
+				<input type="button" class="form-control text-left datetimepicker hidden-sm hidden-xs" id="end-datetimepicker" name="end-datetime" required value="请选择结束时间">
 			</div>
 			<div class="form-group">
 				<label for="content">会议内容</label>
@@ -174,21 +189,52 @@
     $.noConflict();
 
     //移动端和飞信时间选择器
-    $("#datetime").click(function(){
-    	window.WebContainer.forSetTime('yyyy-mm-dd HH:mm','backID','setTime');
-    });
+    // $("#datetime").click(function(){
+    // 	window.WebContainer.forSetTime('yyyy-mm-dd HH:mm','backID','setTime');
+    // });
 
-    function setTime(backID,dateStr){
-    	$("#datetime").val(dateStr);
-    }
-    
+    // function setTime(backID,dateStr){
+    // 	$("#datetime").val(dateStr);
+    // }
+
+    //移动端时间选择器
+
+
+    $('#begin-datetime,#end-datetime').click(function(){
+    	var that=$(this);
+    	defaultTime =(that.hasClass('end-datetime')) ? $('#begin-datetime').val() : new Date();
+    	console.log(defaultTime); 
+        var datePicker = new DateTimePicker.Date({
+            lang:'zh-CN',
+            formate:'yyyy-MM-dd',
+            default:defaultTime, 
+        })
+        datePicker.on('selected',function(formatDate){
+            var timePicker = new DateTimePicker.Time({
+                lang:'zh-CN',
+                formate:'HH:mm',
+                default:defaultTime,       
+            })
+            timePicker.on('selected',function(formatTime){
+                that.val(formatDate+' '+formatTime);
+                if($('#end-datetime').val() != '' && 
+                	($('#end-datetime').val() < $('#begin-datetime').val()) ){
+                	dailog('结束时间不能在开始时间之前')
+                	$('#end-datetime').val('')	
+                }
+            })
+        })
+
+    })
+
 
 	jQuery(document).ready(function($){
   			// PC端时间日期选择器
-	 	 $('#datetimepicker').datetimepicker({
+	 	 $('#begin-datetimepicker,#end-datetimepicker').datetimepicker({
 	  			 language:'zh-CN',
    				 format: 'yyyy-mm-dd hh:ii',
    				 startDate:new Date(),
+   				 forceParse:false,
    				 autoclose:true,
    				 showMeridian:true,
    				 todayBtn:true
@@ -257,17 +303,23 @@
 
 	$("#create").click(function () {
 		var title = $("#title").val();
-		var date = $("#datetime").val() || $("#datetimepicker").val();
+		var beginTime = $("#begin-datetime").val() || $("#begin-datetimepicker").val();
+		var endTime = $("#end-datetime").val() || $("#end-datetimepicker").val();
 		var content = $("#content").val();
 		var contentText = "";
         if(title===""){
             contentText = '请输入会议主题';
-        }else if(date==="" || date==="请选择会议时间"){
-            contentText = '请选择会议时间';
+        }else if(beginTime==="" || beginTime==="请选择开始时间"){
+            contentText = '请选择开始时间';
+        }else if(endTime==="" || endTime==="请选择结束时间"){
+            contentText = '请选择结束时间';
         }else if(content===""){
             contentText = '请输入会议内容';
         }else if(getPatnerNumber()===1){
             contentText = '请添加参与人员';
+        }else if(endTime<=beginTime){
+        	contentText = '结束时间要在开始时间之后';
+        	$("#end-datetimepicker").val('');
         }
         if(contentText != ""){
             $(document).dialog({
@@ -285,6 +337,8 @@
                 chairmanName:contactJsonObject[0].name,
                 chairmanPhone:contactJsonObject[0].phone,
                 chairmanInfo:JSON.stringify(contactJsonObject),
+                meetDateTime:beginTime,
+                endDatetime:endTime,
                 members:JSON.stringify(contactArray)
             },
             success : function(data){
@@ -362,13 +416,14 @@
             '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
             '<img src="/img/partner.png" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p id="'+ name+'">'+name+'</p></div>');
 
-        $('#partner-num').val(1 + contactArray.length);
+
         if(getPatnerNumber() > 16) {
             dailog("超过最大会议人数");
             return;
         }
 
         contactArray.push(contact);
+        $('#partner-num').val(1 + contactArray.length);
 
         $('#add-popup-container').hide();
         $("#add-name").val("");
