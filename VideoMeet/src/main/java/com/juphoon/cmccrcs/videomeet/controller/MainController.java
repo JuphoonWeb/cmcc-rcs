@@ -286,9 +286,66 @@ public class MainController {
         return new ResponseEntity<String>(JSONObject.fromObject(videoMeetInfo).toString(), HttpStatus.OK);
     }
 
+    @RequestMapping (value = "/startVideoMeet", method = RequestMethod.POST)
+    @ResponseBody
+    public Object startVideoMeet(@RequestParam("meetSubject") String meetSubject,
+                                 @RequestParam ("chairmanName") String chairmanName,
+                                 @RequestParam ("chairmanPhone") String chairmanPhone,
+                                 @RequestParam ("chairmanInfo") String chairmanInfo,
+                                 @RequestParam ("meetDateTime") String meetDateTime,
+                                 @RequestParam ("endDatetime") String endDatetime,
+                                 @RequestParam ("members") String members) {
+
+        // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //String meetDateTime = format.format(new Date());
+        //String endDatetime="";
+        VideoMeetInfo videoMeetInfo = new VideoMeetInfo(meetSubject, chairmanName, chairmanPhone, chairmanInfo, meetDateTime,endDatetime, members);
+        int result = videoMeetInfoService.saveVideoMeetInfo(videoMeetInfo);
+        if (result <= 0) {
+            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+        }
+
+        List<VideoMeetMember> videoMeetMemberList = new ArrayList<>();
+        JSONArray jsonArray = JSONArray.fromObject(members);
+        Iterator<Object> it = jsonArray.iterator();
+        while (it.hasNext()) {
+            JSONObject jsonObject = (JSONObject) it.next();
+            VideoMeetMember videoMeetMember = new VideoMeetMember();
+            videoMeetMember.setMeetId(videoMeetInfo.getMeetId());
+            videoMeetMember.setMemberName(jsonObject.getString("name"));
+            videoMeetMember.setMemberPhone(jsonObject.getString("phone"));
+            videoMeetMember.setMemberInfo(jsonObject.toString());
+            videoMeetMemberList.add(videoMeetMember);
+        }
+
+        result = videoMeetMemberService.saveMemberList(videoMeetMemberList);
+        if (result <=0 ) {
+            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+        }
+        sendMeetNotifyMsg(videoMeetInfo, videoMeetMemberList);
+        return new ResponseEntity<String>(JSONObject.fromObject(videoMeetInfo).toString(), HttpStatus.OK);
+    }
 
 
 
+
+    @RequestMapping (value = "/delayEndMeetTime/{meetId}", method = RequestMethod.POST)
+    @ResponseBody
+    public Object delayMeetTmie(@PathVariable Integer meetId, @RequestParam("endDatetime") String endDatetime)
+    {
+        VideoMeetInfo videoMeetInfo = videoMeetInfoService.selectOneByMeetId(meetId);
+        videoMeetInfo.setEndDatetime(endDatetime);
+        int result = videoMeetInfoService.updateVideoMeetInfo(videoMeetInfo);
+        if (result <=0 ) {
+            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<String>(JSONObject.fromObject(videoMeetInfo).toString(), HttpStatus.OK);
+    }
+
+
+
+
+    /*
     @RequestMapping (value = "/startVideoMeet", method = RequestMethod.POST)
     @ResponseBody
     public Object startVideoMeet(@RequestParam("meetSubject") String meetSubject,
@@ -300,7 +357,7 @@ public class MainController {
 //            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
 //        }
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String meetDateTime = format.format(new Date());
         if(StringUtils.isEmpty(chairmanName)) {
             chairmanName = chairmanPhone;
@@ -331,6 +388,7 @@ public class MainController {
         sendMeetNotifyMsg(videoMeetInfo, videoMeetMemberList);
         return new ResponseEntity<String>(JSONObject.fromObject(videoMeetInfo).toString(), HttpStatus.OK);
     }
+    */
 
     @RequestMapping("/sendMeetNotify/{meetId}")
     @ResponseBody

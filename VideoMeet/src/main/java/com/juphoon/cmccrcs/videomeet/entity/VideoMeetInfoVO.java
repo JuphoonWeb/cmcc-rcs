@@ -9,8 +9,8 @@ public class VideoMeetInfoVO extends VideoMeetInfo {
 
     private Integer isRead;
 
-    public VideoMeetInfoVO(Integer meetId, String meetSubject, String meetPassword, String chairmanName, String chairmanPhone, String meetDatetime, Date createDatetime, Integer isRead) {
-        super(meetId, meetSubject, meetPassword, chairmanName, chairmanPhone, meetDatetime, createDatetime);
+    public VideoMeetInfoVO(Integer meetId, String meetSubject, String meetPassword, String chairmanName, String chairmanPhone, String meetDatetime,String endDatetime,Date createDatetime, Integer isRead) {
+        super(meetId, meetSubject, meetPassword, chairmanName, chairmanPhone, meetDatetime,endDatetime,createDatetime);
         this.isRead = isRead;
     }
 

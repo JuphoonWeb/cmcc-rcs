@@ -515,6 +515,92 @@ public class VideoMeetInfoExample {
             return (Criteria) this;
         }
 
+
+
+        public Criteria andEndDatetimeIsNull() {
+            addCriterion("end_datetime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeIsNotNull() {
+            addCriterion("end_datetime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeEqualTo(String value) {
+            addCriterion("end_datetime =", value, "end_datetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeNotEqualTo(String value) {
+            addCriterion("end_datetime <>", value, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeGreaterThan(String value) {
+            addCriterion("end_datetime >", value, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeGreaterThanOrEqualTo(String value) {
+            addCriterion("end_datetime >=", value, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeLessThan(String value) {
+            addCriterion("end_datetime <", value, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeLessThanOrEqualTo(String value) {
+            addCriterion("end_datetime <=", value, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeLike(String value) {
+            addCriterion("end_datetime like", value, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeNotLike(String value) {
+            addCriterion("end_datetime not like", value, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeIn(List<String> values) {
+            addCriterion("end_datetime in", values, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeNotIn(List<String> values) {
+            addCriterion("end_datetime not in", values, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeBetween(String value1, String value2) {
+            addCriterion("end_datetime between", value1, value2, "endDatetime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDatetimeNotBetween(String value1, String value2) {
+            addCriterion("end_datetime not between", value1, value2, "endDatetime");
+            return (Criteria) this;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public Criteria andCreateDatetimeIsNull() {
             addCriterion("create_datetime is null");
             return (Criteria) this;
@@ -574,6 +660,12 @@ public class VideoMeetInfoExample {
             addCriterion("create_datetime not between", value1, value2, "createDatetime");
             return (Criteria) this;
         }
+
+
+
+
+
+
 
         public Criteria andIsDeleteIsNull() {
             addCriterion("is_delete is null");

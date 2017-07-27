@@ -18,6 +18,8 @@ public class VideoMeetInfo implements Serializable {
 
     private String meetDatetime;
 
+    private  String endDatetime;
+
     private Date createDatetime;
 
     private Integer isDelete;
@@ -28,7 +30,7 @@ public class VideoMeetInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public VideoMeetInfo(Integer meetId, String meetSubject, String meetPassword, String chairmanName, String chairmanPhone, String meetDatetime, Date createDatetime, Integer isDelete, Date deleteDatetime, String chairmanInfo, String members) {
+    public VideoMeetInfo(Integer meetId, String meetSubject, String meetPassword, String chairmanName, String chairmanPhone, String meetDatetime, String endDatetime,Date createDatetime, Integer isDelete, Date deleteDatetime, String chairmanInfo, String members) {
         this.meetId = meetId;
         this.meetSubject = meetSubject;
         this.meetPassword = meetPassword;
@@ -36,28 +38,31 @@ public class VideoMeetInfo implements Serializable {
         this.chairmanPhone = chairmanPhone;
         this.chairmanInfo = chairmanInfo;
         this.meetDatetime = meetDatetime;
+        this.endDatetime=endDatetime;
         this.createDatetime = createDatetime;
         this.isDelete = isDelete;
         this.deleteDatetime = deleteDatetime;
         this.members = members;
     }
 
-    public VideoMeetInfo(Integer meetId, String meetSubject, String meetPassword, String chairmanName, String chairmanPhone, String meetDatetime, Date createDatetime) {
+    public VideoMeetInfo(Integer meetId, String meetSubject, String meetPassword, String chairmanName, String chairmanPhone, String meetDatetime,String endDatetime,Date createDatetime) {
         this.meetId = meetId;
         this.meetSubject = meetSubject;
         this.meetPassword = meetPassword;
         this.chairmanName = chairmanName;
         this.chairmanPhone = chairmanPhone;
         this.meetDatetime = meetDatetime;
+        this.endDatetime = endDatetime;
         this.createDatetime = createDatetime;
     }
 
-    public VideoMeetInfo(String meetSubject, String chairmanName, String chairmanPhone, String chairmanInfo, String meetDatetime, String members) {
+    public VideoMeetInfo(String meetSubject, String chairmanName, String chairmanPhone, String chairmanInfo, String meetDatetime,String endDatetime,String members) {
         this.meetSubject = meetSubject;
         this.chairmanName = chairmanName;
         this.chairmanPhone = chairmanPhone;
         this.chairmanInfo = chairmanInfo;
         this.meetDatetime = meetDatetime;
+        this.endDatetime = endDatetime;
         this.createDatetime = new Date();
         this.members = members;
     }
@@ -122,6 +127,22 @@ public class VideoMeetInfo implements Serializable {
         this.meetDatetime = meetDatetime == null ? null : meetDatetime.trim();
     }
 
+
+
+
+    public String getEndDatetime() {
+        return endDatetime;
+    }
+
+    public void setEndDatetime(String endDatetime) {
+        this.endDatetime = endDatetime == null ? null : endDatetime.trim();
+    }
+
+
+
+
+
+
     public Date getCreateDatetime() {
         return createDatetime;
     }
@@ -167,15 +188,18 @@ public class VideoMeetInfo implements Serializable {
         }
         VideoMeetInfo other = (VideoMeetInfo) that;
         return (this.getMeetId() == null ? other.getMeetId() == null : this.getMeetId().equals(other.getMeetId()))
-            && (this.getMeetSubject() == null ? other.getMeetSubject() == null : this.getMeetSubject().equals(other.getMeetSubject()))
-            && (this.getMeetPassword() == null ? other.getMeetPassword() == null : this.getMeetPassword().equals(other.getMeetPassword()))
-            && (this.getChairmanName() == null ? other.getChairmanName() == null : this.getChairmanName().equals(other.getChairmanName()))
-            && (this.getChairmanPhone() == null ? other.getChairmanPhone() == null : this.getChairmanPhone().equals(other.getChairmanPhone()))
-            && (this.getMeetDatetime() == null ? other.getMeetDatetime() == null : this.getMeetDatetime().equals(other.getMeetDatetime()))
-            && (this.getCreateDatetime() == null ? other.getCreateDatetime() == null : this.getCreateDatetime().equals(other.getCreateDatetime()))
-            && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()))
-            && (this.getDeleteDatetime() == null ? other.getDeleteDatetime() == null : this.getDeleteDatetime().equals(other.getDeleteDatetime()))
-            && (this.getMembers() == null ? other.getMembers() == null : this.getMembers().equals(other.getMembers()));
+                && (this.getMeetSubject() == null ? other.getMeetSubject() == null : this.getMeetSubject().equals(other.getMeetSubject()))
+                && (this.getMeetPassword() == null ? other.getMeetPassword() == null : this.getMeetPassword().equals(other.getMeetPassword()))
+                && (this.getChairmanName() == null ? other.getChairmanName() == null : this.getChairmanName().equals(other.getChairmanName()))
+                && (this.getChairmanPhone() == null ? other.getChairmanPhone() == null : this.getChairmanPhone().equals(other.getChairmanPhone()))
+                && (this.getMeetDatetime() == null ? other.getMeetDatetime() == null : this.getMeetDatetime().equals(other.getMeetDatetime()))
+
+                && (this.getEndDatetime() == null ? other.getEndDatetime() == null : this.getEndDatetime().equals(other.getEndDatetime()))
+
+                && (this.getCreateDatetime() == null ? other.getCreateDatetime() == null : this.getCreateDatetime().equals(other.getCreateDatetime()))
+                && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()))
+                && (this.getDeleteDatetime() == null ? other.getDeleteDatetime() == null : this.getDeleteDatetime().equals(other.getDeleteDatetime()))
+                && (this.getMembers() == null ? other.getMembers() == null : this.getMembers().equals(other.getMembers()));
     }
 
     @Override
@@ -188,6 +212,9 @@ public class VideoMeetInfo implements Serializable {
         result = prime * result + ((getChairmanName() == null) ? 0 : getChairmanName().hashCode());
         result = prime * result + ((getChairmanPhone() == null) ? 0 : getChairmanPhone().hashCode());
         result = prime * result + ((getMeetDatetime() == null) ? 0 : getMeetDatetime().hashCode());
+
+        result = prime * result + ((getEndDatetime() == null) ? 0 : getEndDatetime().hashCode());
+
         result = prime * result + ((getCreateDatetime() == null) ? 0 : getCreateDatetime().hashCode());
         result = prime * result + ((getIsDelete() == null) ? 0 : getIsDelete().hashCode());
         result = prime * result + ((getDeleteDatetime() == null) ? 0 : getDeleteDatetime().hashCode());
@@ -207,6 +234,10 @@ public class VideoMeetInfo implements Serializable {
         sb.append(", chairmanName=").append(chairmanName);
         sb.append(", chairmanPhone=").append(chairmanPhone);
         sb.append(", meetDatetime=").append(meetDatetime);
+
+
+        sb.append(", endDatetime=").append(endDatetime);
+
         sb.append(", createDatetime=").append(createDatetime);
         sb.append(", isDelete=").append(isDelete);
         sb.append(", deleteDatetime=").append(deleteDatetime);
