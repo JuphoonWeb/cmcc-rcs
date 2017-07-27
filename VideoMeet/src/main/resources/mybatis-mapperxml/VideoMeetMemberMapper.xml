@@ -126,6 +126,14 @@
     delete from video_meet_member
     where member_id = #{memberId,jdbcType=INTEGER}
   </delete>
+
+  
+  <delete id="deleteMember">
+    delete from video_meet_member
+    where meet_id = #{meetId,jdbcType=INTEGER} AND member_phone=#{memberPhone,jdbcType=VARCHAR}
+  </delete>
+
+
   <insert id="insert" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetMember">
     insert into video_meet_member (member_id, member_name, member_phone, 
       meet_id, is_read, member_info

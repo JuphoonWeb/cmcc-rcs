@@ -254,6 +254,41 @@ public class MainController {
     }
 
 
+    @RequestMapping (value = "/deleteByMeetIdAndMemberPhone/{meetId}", method = RequestMethod.POST)
+    @ResponseBody
+    public Object deleteByMeetIdAndMemberPhone(@PathVariable Integer meetId, @RequestParam("phone") String phone)
+    {
+
+        // int meetId = 82;
+        //  String phone = "19856883882";
+        VideoMeetInfo videoMeetInfo = videoMeetInfoService.selectOneByMeetId(meetId);
+        String Members = videoMeetInfo.getMembers();
+        JSONArray jsonArray1 = JSONArray.fromObject(Members);
+        JSONArray jsonArray2 = new JSONArray();
+        Iterator<Object> it1 = jsonArray1.iterator();
+        while (it1.hasNext()) {
+            JSONObject jsonObject = (JSONObject) it1.next();
+            System.out.println(jsonObject.getString("phone"));
+            if (phone.equals(jsonObject.getString("phone").toString())) {
+                continue;
+            } else
+                jsonArray2.add(jsonObject);
+        }
+        videoMeetInfo.setMembers(jsonArray2.toString());
+        int result = videoMeetInfoService.updateVideoMeetInfo(videoMeetInfo);
+        if (result <= 0) {
+            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+        }
+        result= videoMeetMemberService.deleteByMeetIdAndPhone(meetId, phone);
+        if (result <= 0) {
+            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<String>(JSONObject.fromObject(videoMeetInfo).toString(), HttpStatus.OK);
+    }
+
+
+
+
     @RequestMapping (value = "/startVideoMeet", method = RequestMethod.POST)
     @ResponseBody
     public Object startVideoMeet(@RequestParam("meetSubject") String meetSubject,
