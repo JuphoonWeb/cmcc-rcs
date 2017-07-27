@@ -10,7 +10,7 @@
 	<style>
 		.item-time{
 			color:rgb(0, 197, 195);
-			font-size:16px;
+			font-size:18px;
 		}
         .badge{
             background-color: rgb(0, 197, 195);

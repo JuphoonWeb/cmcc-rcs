@@ -174,6 +174,7 @@
         $(joinMeetBtn).addClass("btn-block");
         $(joinMeetBtn).parent().removeClass("btn-group");
         $(".add").hide();
+        $(".glyphicon-option-vertical").hide();
     }
 
 
@@ -273,13 +274,12 @@
                         members:JSON.stringify(newContactArray),
 					},
 					success:function(data){
-					    alert(data.members);
+//					    alert(data.members);
                         $("#demo").children().remove();
 					    var jsonObj=JSON.parse(data.members);
 					    var txt='';
                         for (var i = 0; i < jsonObj.length; i++)
                         {
-//                            txt+='<a class="list-group-item">'+jsonObj[i].name+'</a>';
                             txt+='<div class="list-group-item"> <a href="">'+jsonObj[i].name+'</a> <span id="test" class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
                         }
                         $("#demo").append(txt);
@@ -287,7 +287,7 @@
                     error : function(data){
                         $(document).dialog({
                             overlayClose: true,
-                            content: "服务器异常\n" + data.responseText,
+                            content: "服务器异常\n" + JSON.parse(data.responseText).status,
                         });
                     }
 				})
@@ -308,7 +308,25 @@
 				overlayClose:true,
                 content: '确定将该联系人从会议中删除吗？',
 				onClickConfirmBtn:function(){
-					currentItem.remove();
+					members=${videoMeetInfo.members};
+					var index=currentItem.index();
+					$.ajax({
+						type:'post',
+						url:'/VideoMeet/deleteByMeetIdAndMemberPhone/${videoMeetInfo.meetId}',
+						dataType:'json',
+                        data:{
+                            phone:members[index].phone,
+                        },
+						success:function(){
+							currentItem.remove();
+						},
+						error:function(data){
+                            $(document).dialog({
+                                overlayClose: true,
+                                content: "服务器异常\n" + JSON.parse(data.responseText).status,
+                            });
+						}
+					})
 				}
             });
             $('#delete').off();
