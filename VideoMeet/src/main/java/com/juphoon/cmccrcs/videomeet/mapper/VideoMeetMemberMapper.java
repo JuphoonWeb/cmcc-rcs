@@ -35,4 +35,6 @@ public interface VideoMeetMemberMapper {
     int updateByPrimaryKeyWithBLOBs(VideoMeetMember record);
 
     int updateByPrimaryKey(VideoMeetMember record);
+
+    int  deleteMember(@Param("meetId")Integer meetId, @Param("memberPhone")String memberPhone);
 }

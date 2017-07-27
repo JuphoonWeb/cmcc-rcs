@@ -20,4 +20,6 @@ public interface VideoMeetMemberService {
     public int updateUnreadByMemberPhone(String phone);
 
     public int updateUnreadByMeetIdAndPhone(int meetId, String phone);
+
+    public int deleteByMeetIdAndPhone(Integer meetId, String phone);
 }

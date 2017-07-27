@@ -73,4 +73,9 @@ public class VideoMeetMemberServiceImpl implements VideoMeetMemberService {
         meetMember.setIsRead(1);
         return videoMeetMemberMapper.updateByExampleSelective(meetMember, example);
     }
+    @Override
+    public int deleteByMeetIdAndPhone(Integer meetId, String phone)
+    {
+        return  videoMeetMemberMapper.deleteMember(meetId,phone);
+    }
 }
