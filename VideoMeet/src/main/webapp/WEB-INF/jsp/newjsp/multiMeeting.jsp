@@ -163,7 +163,7 @@
                                 isRead = 'style="display:none;"';
                             }
 
-                            result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" '+ isRead+' src="/img/unread-xs.png" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png"  '+ isRead+' alt=""></div></div></a></div>';
+                            result += '<div class="item"><a href="/VideoMeet/showVideoMeetInfoDetail/'+obj.videoMeetInfoList[i].meetId +'"><div class="row"><div class="col-xs-10 col-md-11"><div class="item-time"><b>' + obj.videoMeetInfoList[i].meetDatetime + '</b></div><div class="item-theme">会议主题:' + obj.videoMeetInfoList[i].meetSubject + '</div><div class="item-id">会议ID&nbsp;&nbsp;&nbsp;&nbsp;' + obj.videoMeetInfoList[i].meetId + '</div></div><div class="col-xs-2 col-md-1"><img class="unread-icon-xs hidden-md hidden-lg" '+ isRead+' src="/img/unread-xs.svg" alt=""><img class="unread-icon-md hidden-xs hidden-sm" src="/img/unread-md.png"  '+ isRead+' alt=""></div></div></a></div>';
 
                         }
                         $('.list').eq(itemIndex).empty();

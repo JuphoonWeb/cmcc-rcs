@@ -29,6 +29,10 @@
         .partner a:hover{
             background-color: rgb(234,234,234);
         }
+
+		.hide{
+			display:none;
+		}
         
         .mini-menu-container{
             display: none;
@@ -41,7 +45,7 @@
         }
         .mini-menu{
             position:absolute;
-            right:30px;bottom:50px;
+            right:40px;bottom:50px;
             z-index: 100;
         }
         .mini-menu li{
@@ -125,7 +129,7 @@
         			<th>开始时间</th><td id="begin-datetime">${videoMeetInfo.meetDatetime}</td>
         		</tr>
                 <tr>
-                    <th>结束时间</th><td id="end-datetime">2017-07-27 11:49:35</td>
+                    <th>结束时间</th><td id="end-datetime">${videoMeetInfo.endDatetime}</td>
                 </tr>
 
 
@@ -180,14 +184,11 @@
     var txt='';
     for (var index = 0; index < membersJsonArray.length; index++)
     {
-//        txt+='<a class="list-group-item">'+membersJsonArray[index].name+'</a>';
-        txt+='<div class="list-group-item"> <a href="">'+membersJsonArray[index].name+'</a> <span class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
+        txt+='<div class="list-group-item"> <a href="">'+membersJsonArray[index].name+'</a> <span onclick="optionVerticalHandler(this)" id="test" class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
+
     }
     $("#demo").append(txt);
-</script>
 
-
-<script type="text/javascript">
     var currentPhone = '${currentPhone}';
     var currentName = '${currentName}';
     var isMeetMember = false;
@@ -290,50 +291,86 @@
             $('#mini-menu-container').hide();
         })
     })
+    <%--$('#change-end-time').click(function(){--%>
+        <%--$('#mini-menu-container').hide();--%>
+        <%--var defaultTime=$('#begin-datetime').text();--%>
+        <%--var datePicker = new DateTimePicker.Date({--%>
+            <%--lang:'zh-CN',--%>
+            <%--formate:'yyyy-MM-dd',--%>
+            <%--default:defaultTime,--%>
+        <%--})--%>
+        <%--datePicker.on('selected',function(formatDate){--%>
+            <%--var timePicker = new DateTimePicker.Time({--%>
+                <%--lang:'zh-CN',--%>
+                <%--formate:'HH:mm',--%>
+                <%--default:defaultTime,--%>
+            <%--})--%>
+            <%--timePicker.on('selected',function(formatTime){--%>
+                <%--var endDatetime=formatDate+' '+formatTime+':00';--%>
+                <%--if(endDatetime <= $('#begin-datetime').text()){--%>
+                    <%--dailog('结束时间不能在开始时间之前，请重新选择');--%>
+                <%--}--%>
+                <%--$('#end-datetime').text(endDatetime);--%>
+                <%--$.ajax({--%>
+                    <%--type:'post',--%>
+                    <%--url:'/VideoMeet/delayEndMeetTime/${videoMeetInfo.meetId}',--%>
+                    <%--dataType:'json',--%>
+                    <%--data:{--%>
+                        <%--endDatetime:endDatetime,--%>
+                    <%--},--%>
+                    <%--success:function(data){--%>
+                    <%--},--%>
+                    <%--error:function(data){--%>
+                        <%--$(document).dialog({--%>
+                        <%--overlayClose: true,--%>
+                        <%--content: "服务器异常\n" + JSON.parse(data.responseText).status,--%>
+                        <%--});--%>
+                    <%--}--%>
+
+                <%--})--%>
+            <%--})--%>
+        <%--})--%>
+
+    <%--})--%>
+
     $('#change-end-time').click(function(){
         $('#mini-menu-container').hide();
-        var defaultTime=$('#begin-datetime').text();
-        var datePicker = new DateTimePicker.Date({
-            lang:'zh-CN',
-            formate:'yyyy-MM-dd',
-            default:defaultTime, 
-        })
-        datePicker.on('selected',function(formatDate){
-            var timePicker = new DateTimePicker.Time({
-                lang:'zh-CN',
-                formate:'HH:mm',
-                default:defaultTime,       
-            })
-            timePicker.on('selected',function(formatTime){
-                var endDatetime=formatDate+' '+formatTime+':00';
-                if(endDatetime <= $('#begin-datetime').text()){
-                    dailog('结束时间不能在开始时间之前，请重新选择');
-                }
-                $('#end-datetime').text(endDatetime);
-                $.ajax({
-                    type:'post',
-                    url:'/VideoMeet/delayEndMeetTime/${videoMeetInfo.meetId}',
-                    dataType:'json',
-                    data:{
-                        endDatetime:endDatetime,
-                    },
-                    success:function(data){
-                    },
-                    error:function(data){
-                        $(document).dialog({
+        if(isIOSInFeixin()){
+            navigator.WebContainer.forSetTime('time','backID','setEndTime');
+
+        }else if(isAndroidInFeixin()) {
+            window.WebContainer.forSetTime('time', 'backID', 'setEndTime');
+        }
+    });
+
+    function setEndTime(backID,dateStr){
+        if($('#end-datetime').text() != '' &&
+            ($('#end-datetime').text() < $('#begin-datetime').text()) ){
+            dailog('结束时间不能在开始时间之前')
+        }else{
+            $('#end-datetime').text(dateStr);
+            $.ajax({
+                type:'post',
+                url:'/VideoMeet/delayEndMeetTime/${videoMeetInfo.meetId}',
+                dataType:'json',
+                data:{
+                    endDatetime:dateStr,
+                },
+                success:function(data){
+                },
+                error:function(data){
+                    $(document).dialog({
                         overlayClose: true,
                         content: "服务器异常\n" + JSON.parse(data.responseText).status,
-                        });
-                    }
+                    });
+                }
 
-                })
             })
-        })
-
-    })
-
+        }
+    }
 	//新增联系人到会议
     $('#add-partner').click(function(){
+        $('#mini-menu-container').hide();
         if(isIOSInFeixin()){
             navigator.WebContainer.selectEnterpriseContactMulti("选择","16","backADD", "addContactToList","");
         }else if(isAndroidInFeixin()){
@@ -347,7 +384,7 @@
 
         //检测所选联系人是否已在列表中
         var contactArray=JSON.parse(jsonContactArray);
-        var currentMembersArray = $('#demo').children();
+        var currentMembersArray = $('#demo a');
 		var newContactArray=[];
 		var flag=true;
 		for(var i=0;i<contactArray.length;i++){
@@ -382,15 +419,14 @@
                         members:JSON.stringify(newContactArray),
 					},
 					success:function(data){
-//					    alert(data.members);
                         $("#demo").children().remove();
 					    var jsonObj=JSON.parse(data.members);
 					    var txt='';
                         for (var i = 0; i < jsonObj.length; i++)
                         {
-                            txt+='<div class="list-group-item"> <a href="">'+jsonObj[i].name+'</a> <span id="test" class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
+                            txt+='<div class="list-group-item"> <a href="">'+jsonObj[i].name+'</a> <span onclick="optionVerticalHandler(this)" id="test" class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
                         }
-                        $("#demo").append(txt);
+                        $("#demo").html(txt);
 					},
                     error : function(data){
                         $(document).dialog({
@@ -406,43 +442,50 @@
     }
 
     //成员列表右侧三点菜单按钮逻辑
-    $(document).on('click','#option-vertical',function(){
-        var currentItem=$(this).parent();
+    function optionVerticalHandler(el){
+        var currentItem=el.parentNode;
         $('#bottom-menu-container').show();
         $('#delete').on('click',function(){
             $('#bottom-menu-container').hide();
             $(document).dialog({
                 type : 'confirm',
-				overlayClose:true,
+                overlayClose:true,
                 content: '确定将该联系人从会议中删除吗？',
-				onClickConfirmBtn:function(){
-					var index=currentItem.index();
-					$.ajax({
-						type:'post',
-						url:'/VideoMeet/deleteByMeetIdAndMemberPhone/${videoMeetInfo.meetId}',
-						dataType:'json',
+                onClickConfirmBtn:function(){
+                    var index=$('.list-group-item').index(currentItem);
+                    $.ajax({
+                        type:'post',
+                        url:'/VideoMeet/deleteByMeetIdAndMemberPhone/${videoMeetInfo.meetId}',
+                        dataType:'json',
                         data:{
                             phone:${videoMeetInfo.members}[index].phone,
                         },
-						success:function(data){
-							currentItem.hide();
-    						},
-    						error:function(data){
-                                $(document).dialog({
-                                    overlayClose: true,
-                                    content: "服务器异常\n" + JSON.parse(data.responseText).status,
-                                });
-    						}
-    					})
-    				}
+                        success:function(data){
+                            $("#demo").children().remove();
+                            var jsonObj=JSON.parse(data.members);
+                            var txt='';
+                            for (var i = 0; i < jsonObj.length; i++)
+                            {
+                                txt+='<div class="list-group-item"> <a href="">'+jsonObj[i].name+'</a> <span onclick="optionVerticalHandler(this)" id="test" class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
+                            }
+                            $("#demo").html(txt);
+                        },
+                        error:function(data){
+                            $(document).dialog({
+                                overlayClose: true,
+                                content: "服务器异常\n" + JSON.parse(data.responseText).status,
+                            });
+                        }
+                    })
+                }
             });
             $('#delete').off();
-		})
+        })
         $('#bottom-menu-mask').on('click',function(){
             $('#bottom-menu-container').hide();
             $('#delete').off();
         })
-    })
+    }
 
 </script>
 </body>

@@ -34,7 +34,7 @@
 		}
 		.delete-sup{
 			 position: absolute;
-			 right:20px;top:0;
+			 right:15%;top:0;
 			 display: none;
 		}
 		.complete{
@@ -111,12 +111,12 @@
 			</div>
 			<div class="form-group">
 				<label>开始时间</label>
-				<input class="form-control text-left begin-datetime hidden-md hidden-lg" id="begin-datetime" name="begin-datetime" required placeholder="请选择开始时间">
+				<input type="button" class="form-control text-left begin-datetime hidden-md hidden-lg datetime" id="begin-datetime" name="begin-datetime" required value="请选择开始时间">
 				<input type="button" class="form-control text-left datetimepicker hidden-sm hidden-xs" id="begin-datetimepicker" name="begin-datetime" required value="请选择开始时间">
 			</div>
 			<div class="form-group">
 				<label>结束时间</label>
-				<input class="form-control text-left end-datetime hidden-md hidden-lg" id="end-datetime" name="end-datetime" required placeholder="请选择结束时间">
+				<input type="button" class="form-control text-left end-datetime hidden-md hidden-lg datetime" id="end-datetime" name="end-datetime" required value="请选择结束时间">
 				<input type="button" class="form-control text-left datetimepicker hidden-sm hidden-xs" id="end-datetimepicker" name="end-datetime" required value="请选择结束时间">
 			</div>
 			<div class="form-group">
@@ -172,7 +172,6 @@
 					</div>
 				</div>
 			</form>
-			<p class="add-tip" id="add-tip">请输入姓名</p>
 		</div>
 	</div>
 </body>
@@ -189,43 +188,52 @@
     $.noConflict();
 
     //移动端和飞信时间选择器
-    // $("#datetime").click(function(){
-    // 	window.WebContainer.forSetTime('yyyy-mm-dd HH:mm','backID','setTime');
-    // });
+     $('#begin-datetime,#end-datetime').click(function(){
+		 var idSelector='#'+$(this).attr('id');
+         if(isIOSInFeixin()){
+            navigator.WebContainer.forSetTime('time',idSelector,'setTime');
 
-    // function setTime(backID,dateStr){
-    // 	$("#datetime").val(dateStr);
-    // }
+        }else if(isAndroidInFeixin()) {
+            window.WebContainer.forSetTime('time', idSelector, 'setTime');
+        }
+	 });
 
-    //移动端时间选择器
-
-
-    $('#begin-datetime,#end-datetime').click(function(){
-    	var that=$(this);
-    	defaultTime =(that.hasClass('end-datetime')) ? $('#begin-datetime').val() : new Date();
-    	console.log(defaultTime); 
-        var datePicker = new DateTimePicker.Date({
-            lang:'zh-CN',
-            formate:'yyyy-MM-dd',
-            default:defaultTime, 
-        })
-        datePicker.on('selected',function(formatDate){
-            var timePicker = new DateTimePicker.Time({
-                lang:'zh-CN',
-                formate:'HH:mm',
-                default:defaultTime,       
-            })
-            timePicker.on('selected',function(formatTime){
-                that.val(formatDate+' '+formatTime);
-                if($('#end-datetime').val() != '' && 
+     function setTime(idSelector,dateStr){
+     	$(idSelector).val(dateStr);
+         if($('#end-datetime').val() != '' &&
                 	($('#end-datetime').val() < $('#begin-datetime').val()) ){
                 	dailog('结束时间不能在开始时间之前')
-                	$('#end-datetime').val('')	
+                	$('#end-datetime').val('')
                 }
-            })
-        })
+     }
 
-    })
+    //移动端时间选择器
+//    $('#begin-datetime,#end-datetime').click(function(){
+//    	var that=$(this);
+//    	defaultTime =(that.hasClass('end-datetime')) ? $('#begin-datetime').val() : new Date();
+//    	console.log(defaultTime);
+//        var datePicker = new DateTimePicker.Date({
+//            lang:'zh-CN',
+//            formate:'yyyy-MM-dd',
+//            default:defaultTime,
+//        })
+//        datePicker.on('selected',function(formatDate){
+//            var timePicker = new DateTimePicker.Time({
+//                lang:'zh-CN',
+//                formate:'HH:mm',
+//                default:defaultTime,
+//            })
+//            timePicker.on('selected',function(formatTime){
+//                that.val(formatDate+' '+formatTime);
+//                if($('#end-datetime').val() != '' &&
+//                	($('#end-datetime').val() < $('#begin-datetime').val()) ){
+//                	dailog('结束时间不能在开始时间之前')
+//                	$('#end-datetime').val('')
+//                }
+//            })
+//        })
+//
+//    })
 
 
 	jQuery(document).ready(function($){
@@ -318,8 +326,9 @@
         }else if(getPatnerNumber()===1){
             contentText = '请添加参与人员';
         }else if(endTime<=beginTime){
-        	contentText = '结束时间要在开始时间之后';
-        	$("#end-datetimepicker").val('');
+        	contentText = '结束时间不能在开始时间之前,请重新选择';
+        	$("#end-datetimepicker").val('请选择结束时间').focus();
+            $("#end-datetime").val('请选择结束时间').focus();
         }
         if(contentText != ""){
             $(document).dialog({
@@ -413,8 +422,8 @@
         }
         var contact = {name:name, phone:phone};
         $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-            '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
-            '<img src="/img/partner.png" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p id="'+ name+'">'+name+'</p></div>');
+            '<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
+            '<img src="/img/partner.svg" alt="" class="partner-head" id="'+phone +'" height="48" width="48" style="border-radius: 50%" /><p id="'+ name+'">'+name+'</p></div>');
 
 
         if(getPatnerNumber() > 16) {
@@ -458,8 +467,8 @@
                 name = json[i].name.substring(0,4);
 			}
             $('.partner-list').append('<div class="partner col-xs-3 text-center center-block animated" id="partner">' +
-                '<div class="delete-sup"><img src="/img/delete-sup.png" alt=""></div>'+
-                '<img src="/img/partner.png" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p id="'+ json[i].name+'">'+name+'</p></div>');
+                '<div class="delete-sup"><img src="/img/delete-sup.svg" alt=""></div>'+
+                '<img src="/img/partner.svg" alt="" class="partner-head" id="'+json[i].phone +'" height="48" width="48" style="border-radius: 50%" /><p id="'+ json[i].name+'">'+name+'</p></div>');
         }
         $('#partner-num').val(1 + contactArray.length);
 
