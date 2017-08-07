@@ -3,49 +3,57 @@
 <mapper namespace="com.juphoon.cmccrcs.videomeet.mapper.VideoMeetInfoMapper">
   <resultMap id="BaseResultMap" type="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfo">
     <constructor>
-      <idArg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="meet_subject" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="meet_password" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="chairman_name" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="chairman_phone" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="meet_datetime" javaType="java.lang.String" jdbcType="VARCHAR" />
-
-      <arg column="end_datetime" javaType="java.lang.String" jdbcType="VARCHAR" />
-
-      <arg column="create_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <idArg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+      <arg column="meet_subject" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="meet_password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="chairman_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="chairman_phone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="meet_datetime" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="end_datetime" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="create_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
     </constructor>
   </resultMap>
+
+  <resultMap id="CountResultMap" type="com.juphoon.cmccrcs.videomeet.entity.UserInfo">
+    <constructor>
+      <arg column="chairman_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="user_count" javaType="java.lang.Integer" jdbcType="VARCHAR"/>
+
+    </constructor>
+  </resultMap>
+
+
   <resultMap id="ResultMapWithBLOBs" type="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfo">
     <constructor>
-      <idArg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="meet_subject" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="meet_password" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="chairman_name" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="chairman_phone" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="meet_datetime" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <idArg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+      <arg column="meet_subject" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="meet_password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="chairman_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="chairman_phone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="meet_datetime" javaType="java.lang.String" jdbcType="VARCHAR"/>
 
-      <arg column="end_datetime" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="end_datetime" javaType="java.lang.String" jdbcType="VARCHAR"/>
 
-      <arg column="create_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="is_delete" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="delete_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="chairman_info" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
-      <arg column="members" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="create_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+      <arg column="is_delete" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+      <arg column="delete_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+      <arg column="chairman_info" javaType="java.lang.String" jdbcType="LONGVARCHAR"/>
+      <arg column="members" javaType="java.lang.String" jdbcType="LONGVARCHAR"/>
     </constructor>
   </resultMap>
   <resultMap id="ResultMapWithIsRead" type="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfoVO">
     <constructor>
-      <idArg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="meet_subject" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="meet_password" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="chairman_name" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="chairman_phone" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="meet_datetime" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <idArg column="meet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+      <arg column="meet_subject" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="meet_password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="chairman_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="chairman_phone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="meet_datetime" javaType="java.lang.String" jdbcType="VARCHAR"/>
 
-      <arg column="end_datetime" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="end_datetime" javaType="java.lang.String" jdbcType="VARCHAR"/>
 
-      <arg column="create_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="is_read" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_datetime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+      <arg column="is_read" javaType="java.lang.Integer" jdbcType="INTEGER"/>
     </constructor>
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -66,7 +74,8 @@
                 </when>
                 <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach close=")" collection="criterion.value" item="listItem" open="("
+                           separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -88,50 +97,91 @@
     video_meet_info.meet_id, meet_subject, meet_password, chairman_name, chairman_phone, meet_datetime,end_datetime,
     create_datetime, is_read
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfoExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfoExample"
+          resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
     </if>
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List"/>
     ,
-    <include refid="Blob_Column_List" />
+    <include refid="Blob_Column_List"/>
     from video_meet_info
     <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
+      <include refid="Example_Where_Clause"/>
     </if>
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfoExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfoExample"
+          resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List"/>
     from video_meet_info
     <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
+      <include refid="Example_Where_Clause"/>
     </if>
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
+
+
+  <select id="selectByTime" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+    select * from video_meet_info
+    <where>
+      <if test="S_time!=null and S_time!=''and E_time!=''and E_time!='' ">
+        create_datetime BETWEEN #{S_time} AND #{E_time}
+      </if>
+
+      <if test="name!=null and name!=''">
+        and  chairman_name=#{name}
+      </if>
+    </where>
+
+  </select>
+
+
+
+
+
+
+  <select id="selectByTimeCount" parameterType="java.lang.String" resultMap="CountResultMap">
+
+    select chairman_name , count(*) as user_count from video_meet_info
+    <where>
+      <if test="startTime!=null and startTime!=''and endTime!=''and endTime!='' ">
+
+        create_datetime BETWEEN #{startTime} AND #{endTime} group by chairman_name
+
+      </if>
+    </where>
+  </select>
+
+
+
+
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List"/>
     ,
-    <include refid="Blob_Column_List" />
+    <include refid="Blob_Column_List"/>
     from video_meet_info
     where meet_id = #{meetId,jdbcType=INTEGER}
   </select>
   <select id="selectByMemberPhone" parameterType="java.lang.String" resultMap="ResultMapWithIsRead">
-    select distinct <include refid="Base_Column_List_With_IsRead" />
+    select distinct
+    <include refid="Base_Column_List_With_IsRead"/>
     from video_meet_info
     LEFT JOIN video_meet_member on video_meet_info.meet_id = video_meet_member.meet_id
     <where>
-      <if test = "_parameter != null">
+      <if test="_parameter != null">
         member_phone = #{_parameter, jdbcType=VARCHAR}
       </if>
     </where>
@@ -235,7 +285,8 @@
       </if>
     </trim>
   </insert>
-  <insert id="insertAndGetMeetId" useGeneratedKeys="true" keyProperty="meetId" keyColumn="meet_id" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfo">
+  <insert id="insertAndGetMeetId" useGeneratedKeys="true" keyProperty="meetId" keyColumn="meet_id"
+          parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfo">
     insert into video_meet_info (meet_subject, meet_password, chairman_name,
     chairman_phone, chairman_info, meet_datetime,end_datetime,members, create_datetime
     )
@@ -299,14 +350,14 @@
   <update id="updateByPrimaryKey" parameterType="com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfo">
     update video_meet_info
     set meet_subject = #{meetSubject,jdbcType=VARCHAR},
-    meet_password = #{meetPassword,jdbcType=VARCHAR},
-    chairman_name = #{chairmanName,jdbcType=VARCHAR},
-    chairman_phone = #{chairmanPhone,jdbcType=VARCHAR},
-    meet_datetime = #{meetDatetime,jdbcType=VARCHAR},
-    end_datetime = #{endDatetime,jdbcType=VARCHAR},
-    create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
-    is_delete = #{isDelete,jdbcType=INTEGER},
-    delete_datetime = #{deleteDatetime,jdbcType=TIMESTAMP}
+      meet_password = #{meetPassword,jdbcType=VARCHAR},
+      chairman_name = #{chairmanName,jdbcType=VARCHAR},
+      chairman_phone = #{chairmanPhone,jdbcType=VARCHAR},
+      meet_datetime = #{meetDatetime,jdbcType=VARCHAR},
+      end_datetime = #{endDatetime,jdbcType=VARCHAR},
+      create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=INTEGER},
+      delete_datetime = #{deleteDatetime,jdbcType=TIMESTAMP}
     where meet_id = #{meetId,jdbcType=INTEGER}
   </update>
 </mapper>

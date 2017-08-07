@@ -127,7 +127,6 @@
     where member_id = #{memberId,jdbcType=INTEGER}
   </delete>
 
-  
   <delete id="deleteMember">
     delete from video_meet_member
     where meet_id = #{meetId,jdbcType=INTEGER} AND member_phone=#{memberPhone,jdbcType=VARCHAR}
