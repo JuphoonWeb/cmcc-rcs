@@ -44,9 +44,6 @@ public class SearchController {
     private VideoMeetInfoService videoMeetInfoService;
     @Autowired
     private UserInfoService userInfoService;
-    @Autowired
-    private VideoMeetInfoMapper videoMeetInfoMapper;
-
     /*
      * 查询时间段间的用户使用情况（名字可选）
      */
@@ -56,14 +53,18 @@ public class SearchController {
                                                @RequestParam(defaultValue = "20") Integer size,
                                                @RequestParam String startTime,
                                                @RequestParam String endTime,
+                                               HttpServletResponse response,
                                                @RequestParam(required = false) String name) {
 
         try {
+            response.setHeader("Access-Control-Allow-Credentials","true");
             PageInfo<VideoMeetInfo> pageInfo = videoMeetInfoService.selectByTimeInfoList(page, size, startTime, endTime, name);
             return ResponseEntity.success(getMap(pageInfo));
-        } catch (Exception e) {
+             }
+             catch (Exception e)
+             {
             return ResponseEntity.fail(getFailMap());
-        }
+             }
     }
 
 
@@ -83,7 +84,7 @@ public class SearchController {
             PageInfo<UserInfo> pageInfo = videoMeetInfoService.selectByTimeCountInfoList(page, size, startTime, endTime);
             return ResponseEntity.success(getMap(pageInfo));
         } catch (Exception e) {
-
+            e.printStackTrace();
             return ResponseEntity.fail(getFailMap());
         }
     }
@@ -111,24 +112,24 @@ public class SearchController {
     public ResponseEntity getSendVideoMeetList(HttpServletResponse response,String username, String password) {
 
 
-        Cookie namecookie = new Cookie("name",username);
-        namecookie.setMaxAge(60*30);
-        namecookie.setPath("/");
-        response.addCookie(namecookie);
-
+//        Cookie namecookie = new Cookie("name",username);
+//       namecookie.setMaxAge(60*30);
+//       namecookie.setPath("/");
+//       response.addCookie(namecookie);
+//      response.setHeader("Access-Control-Allow-Credentials","true");
 
         if (userInfoService.login(username) == null) {
             return ResponseEntity.fail();
 
-        } else {
+        }
             String password1 = userInfoService.login(username);
 
             if (password1.equals(password)) {
                 return ResponseEntity.success();
-            } else {
-                return ResponseEntity.fail();
             }
-        }
+                return ResponseEntity.fail();
+
+
     }
 
 
@@ -143,7 +144,8 @@ public class SearchController {
     {
         //   ExportExcel<VideoMeetInfo> ex = new ExportExcel<VideoMeetInfo>();
         String[] headers = {"会议主题", "发起人姓名", "发起人手机", "会议创建时间", "会议开始时间", "会议结束时间"};
-        List<VideoMeetInfo> pageInfo = videoMeetInfoMapper.selectByTime(startTime, endTime, name);
+        PageInfo<VideoMeetInfo> pageInfo1 = videoMeetInfoService.selectByTime(startTime, endTime, name);
+        List<VideoMeetInfo> pageInfo=pageInfo1.getList();
         List<demo> dataset = new ArrayList<demo>();
         for (int i = 0; i < pageInfo.size(); i++) {
             dataset.add(new demo(
@@ -196,7 +198,9 @@ public class SearchController {
                         textValue = sdf.format(date);
                     } else {
                         //其它数据类型都当作字符串简单处理
-                        textValue = value.toString();
+
+                        textValue = String.valueOf(value);
+
                     }
                     //如果不是图片数据，就利用正则表达式判断textValue是否全部由数字组成
                   /* if (textValue != null) {

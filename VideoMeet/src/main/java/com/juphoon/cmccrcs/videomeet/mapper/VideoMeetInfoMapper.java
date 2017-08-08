@@ -24,7 +24,7 @@ public interface VideoMeetInfoMapper {
     List<VideoMeetInfoVO> selectByMemberPhone(String phone);
 
 
-    List<VideoMeetInfo> selectByTime(@Param("S_time")String S_time,@Param("E_time") String E_time, @Param("name")String name);
+
 
     String login(String username);
 
@@ -39,4 +39,5 @@ public interface VideoMeetInfoMapper {
 
     List<UserInfo> selectByTimeCount(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
+    List<VideoMeetInfo> selectByTime(@Param("S_time")String S_time,@Param("E_time") String E_time, @Param("name")String name);
 }

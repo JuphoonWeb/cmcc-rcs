@@ -27,4 +27,9 @@ public interface VideoMeetInfoService {
 
 
     public PageInfo<UserInfo> selectByTimeCountInfoList(int start, int size, String S_time, String E_time);
+
+
+    public PageInfo<VideoMeetInfo> selectByTime(String S_time, String E_time,String name);
+
+
 }

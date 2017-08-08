@@ -51,6 +51,16 @@ public class VideoMeetInfoServiceImpl implements VideoMeetInfoService {
     }
 
 
+    @Override
+    public PageInfo<VideoMeetInfo> selectByTime(String S_time, String E_time,String name)
+    {
+
+        List<VideoMeetInfo> resultList = videoMeetInfoMapper.selectByTime(S_time,E_time,name);
+        PageInfo<VideoMeetInfo> pageInfo = new PageInfo<VideoMeetInfo>(resultList);
+        return pageInfo;
+    }
+
+
 
     @Override
     public PageInfo<UserInfo> selectByTimeCountInfoList(int start, int size, String startTime, String endTime)
