@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -107,7 +108,14 @@ public class SearchController {
      */
     @RequestMapping("/login")
     @ResponseBody
-    public ResponseEntity getSendVideoMeetList(String username, String password) {
+    public ResponseEntity getSendVideoMeetList(HttpServletResponse response,String username, String password) {
+
+
+        Cookie namecookie = new Cookie("name",username);
+        namecookie.setMaxAge(60*30);
+        namecookie.setPath("/");
+        response.addCookie(namecookie);
+
 
         if (userInfoService.login(username) == null) {
             return ResponseEntity.fail();

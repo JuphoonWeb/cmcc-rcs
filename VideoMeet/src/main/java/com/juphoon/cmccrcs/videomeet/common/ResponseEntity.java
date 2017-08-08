@@ -40,6 +40,13 @@ public class ResponseEntity {
         return new ResponseEntity(-1,data);
     }
 
+
+    public static ResponseEntity cookieTimeFail()
+    {
+        return new ResponseEntity(-2,null);
+    }
+
+
     public ResponseEntity(int code, Object data) {
         this.code = code;
         this.data = data;
