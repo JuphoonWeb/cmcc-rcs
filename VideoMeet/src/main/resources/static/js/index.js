@@ -174,16 +174,16 @@ function openURLSchemebackFunc(status) {
                 }
             });
         } else {
-            dailog('应用打开失败');
+            dialog('应用打开失败');
         }
     }
 }
 
 function rcsMsgFwdFunc(backId, status) {
     if (status == 1) {
-        dailog("通知发送成功");
+        dialog("通知发送成功");
     } else {
-        dailog("通知发送失败");
+        dialog("通知发送失败");
     }
 }
 
@@ -234,7 +234,7 @@ function launchAppWithUrl(url) {
     }, 3000);
 }
 
-function dailog(message) {
+function dialog(message) {
     $(document).dialog({
         overlayClose: true,
         content: message,

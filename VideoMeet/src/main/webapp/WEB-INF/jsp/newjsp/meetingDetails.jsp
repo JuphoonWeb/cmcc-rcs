@@ -38,13 +38,13 @@
             display: none;
         }
         .mini-menu-mask{
-            position: absolute;
+            position: fixed;
             top:0;left:0;
             width: 100%;height:100%;
             z-index:99;
         }
         .mini-menu{
-            position:absolute;
+            position: fixed;
             right:40px;bottom:50px;
             z-index: 100;
         }
@@ -56,14 +56,14 @@
             display: none;
         }
         .bottom-menu-mask{
-            position:absolute;
+            position:fixed;
             left:0;top:0;
             width:100%;height:100%;
             z-index:99;
             background-color: rgba(0,0,0,.3);
         }
         .bottom-menu{
-            position:absolute;
+            position:fixed;
             width:100%;
             bottom:0px;left:0;
             margin:0;
@@ -211,7 +211,7 @@
         }
         else
         {
-            dailog("您不属于该视频会议的成员，无法加入会议");
+            dialog("您不属于该视频会议的成员，无法加入会议");
         }
     });
     var isChairman=0;
@@ -269,15 +269,15 @@
                 console.log(data);
                 if ('ok' == data)
                 {
-                    dailog('发送通知成功');
+                    dialog('发送通知成功');
                 }
                 else
                 {
-                    dailog('发送通知失败');
+                    dialog('发送通知失败');
                 }
             },
             error: function(xhr, type, errorThrown) {
-                dailog('服务器内部连接超时，请稍后再试');
+                dialog('服务器内部连接超时，请稍后再试');
             }
         });
     }
@@ -308,7 +308,7 @@
             <%--timePicker.on('selected',function(formatTime){--%>
                 <%--var endDatetime=formatDate+' '+formatTime+':00';--%>
                 <%--if(endDatetime <= $('#begin-datetime').text()){--%>
-                    <%--dailog('结束时间不能在开始时间之前，请重新选择');--%>
+                    <%--dialog('结束时间不能在开始时间之前，请重新选择');--%>
                 <%--}--%>
                 <%--$('#end-datetime').text(endDatetime);--%>
                 <%--$.ajax({--%>
@@ -346,7 +346,7 @@
     function setEndTime(backID,dateStr){
         if($('#end-datetime').text() != '' &&
             ($('#end-datetime').text() < $('#begin-datetime').text()) ){
-            dailog('结束时间不能在开始时间之前')
+            dialog('结束时间不能在开始时间之前')
         }else{
             $('#end-datetime').text(dateStr);
             $.ajax({
@@ -401,7 +401,7 @@
 			newContactArray.push(contactArray[i]);
 		}
 		if(newContactArray.length===0){
-            dailog('所选联系人已在当前列表中');
+            dialog('所选联系人已在当前列表中');
 			return;
 		}else{
 

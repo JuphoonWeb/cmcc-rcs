@@ -202,7 +202,7 @@
      	$(idSelector).val(dateStr);
          if($('#end-datetime').val() != '' &&
                 	($('#end-datetime').val() < $('#begin-datetime').val()) ){
-                	dailog('结束时间不能在开始时间之前')
+                	dialog('结束时间不能在开始时间之前')
                 	$('#end-datetime').val('')
                 }
      }
@@ -227,7 +227,7 @@
 //                that.val(formatDate+' '+formatTime);
 //                if($('#end-datetime').val() != '' &&
 //                	($('#end-datetime').val() < $('#begin-datetime').val()) ){
-//                	dailog('结束时间不能在开始时间之前')
+//                	dialog('结束时间不能在开始时间之前')
 //                	$('#end-datetime').val('')
 //                }
 //            })
@@ -409,15 +409,15 @@
         var name = $("#add-name").val();
         var phone = $("#add-phone").val();
         if(name == "") {
-            dailog("姓名不能为空")
+            dialog("姓名不能为空")
             return;
         }
         if(phone == "") {
-            dailog("手机号不能为空")
+            dialog("手机号不能为空")
             return;
         }
         if(!(/^1[34578]\d{9}$/.test(phone))){
-            dailog("手机号格式不正确")
+            dialog("手机号格式不正确")
             return;
         }
         var contact = {name:name, phone:phone};
@@ -427,7 +427,7 @@
 
 
         if(getPatnerNumber() > 16) {
-            dailog("超过最大会议人数");
+            dialog("超过最大会议人数");
             return;
         }
 
