@@ -16,7 +16,7 @@ public class MyWebAppConfigurer
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(new MyInterceptor1()).addPathPatterns("/VideoMeet/**").excludePathPatterns("/VideoMeet/videoMeetList")
+        registry.addInterceptor(new MyInterceptor1()).addPathPatterns("/VideoMeet/**").excludePathPatterns("/VideoMeet/videoMeetList/**")
                 .excludePathPatterns("/VideoMeet/videoMeetList/{currentPhone}").excludePathPatterns("/VideoMeet/error11");
         super.addInterceptors(registry);
     }

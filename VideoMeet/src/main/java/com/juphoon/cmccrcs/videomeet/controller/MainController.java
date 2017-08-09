@@ -23,7 +23,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,6 +48,9 @@ public class MainController {
     @Autowired
     private RcsMsgService rcsMsgService;
 
+    //    private static String MEET_URL = "http://120.27.131.68:8086/";
+    private static String MEET_URL = "http://122.227.209.194:8086/";
+
     @RequestMapping("/index")
     public String index(HttpServletRequest request, Model model) {
         Enumeration<String> headerNames = request.getHeaderNames();
@@ -66,36 +71,43 @@ public class MainController {
 
     @RequestMapping("/error")
     public String error() {
-        return "newjsp/error";
+        return "error";
     }
+
+
+
+
+    @RequestMapping(value="/error11")
+    public String demo11(Model model)
+    {
+        model.addAttribute("phone","currentPhone");
+        return "newjsp/error1";
+    }
+
 
     @RequestMapping(value="/videoMeetList/{currentPhone}", method = RequestMethod.GET)
     public String videoMeetListWithPhone(HttpSession httpSession, Model model, @PathVariable String currentPhone) {
         model.addAttribute("currentPhone", currentPhone);
         httpSession.setAttribute("currentPhone", currentPhone);
         return "newjsp/multiMeeting";
-        //return "videoMeetList";
+        // return "videoMeetList";
     }
 
     @RequestMapping(value="/videoMeetList", method = RequestMethod.GET)
     public String videoMeetList(HttpSession httpSession, Model model, @RequestParam("token")String token) {
-        if (!StringUtils.isEmpty(token))
-        {
+        if (!StringUtils.isEmpty(token) && httpSession.getAttribute("currentPhone") == null) {
             String currentPhone = tokenService.requestMsisdnByCmPassport(token);
             model.addAttribute("currentPhone", currentPhone);
             httpSession.setAttribute("currentPhone", currentPhone);
         }
         return "newjsp/multiMeeting";
-        //  return "videoMeetList";
+        //return "videoMeetList";
     }
 
-    @RequestMapping(value="/error11")
-    public String demo11(Model model)
-    {
-        model.addAttribute("phone","currentPhone");
-        return "newjsp/error";
+    @RequestMapping("/createMeeting")
+    public String createMeeting() {
+        return "newjsp/createMeeting";
     }
-
 
     @RequestMapping("/method")
     public String method() {
@@ -126,7 +138,6 @@ public class MainController {
         }
         int unreadCount = videoMeetMemberService.unreadCountByMemberPhone(phone);
 
-        // PageInfo<VideoMeetInfo> videoMeetInfoList = videoMeetInfoService.selectSendVideoMeetInfoList(phone, start, size);
         PageInfo<VideoMeetInfo> pageInfo = videoMeetInfoService.selectSendVideoMeetInfoList(phone, start, size);
         System.out.println(pageInfo);
         JSONObject jsonObject = new JSONObject();
@@ -135,12 +146,8 @@ public class MainController {
         jsonObject.element("videoMeetInfoList",pageInfo.getList());
         jsonObject.element("total",pageInfo.getTotal());
 
-        //System.out.println(jsonObject.toString());
         return jsonObject.toString();
     }
-
-
-
 
     @RequestMapping ( "/getRecvVideoMeetList/{phone}")
     @ResponseBody
@@ -162,7 +169,7 @@ public class MainController {
         jsonObject.element("videoMeetInfoList",pageInfo.getList());
         jsonObject.element("total",pageInfo.getTotal());
 
-        // System.out.println(jsonObject.toString());
+
         return jsonObject.toString();
     }
 
@@ -172,7 +179,7 @@ public class MainController {
         VideoMeetInfo videoMeetInfo = videoMeetInfoService.selectOneByMeetId(meetId);
         model.put("videoMeetInfo", videoMeetInfo);
 
-        String currentPhone = request.getParameter("currentPhone");
+        String currentPhone = (String) request.getSession().getAttribute("currentPhone");
         String token = request.getParameter("token");
 
         if (StringUtils.isEmpty(currentPhone)) {
@@ -204,14 +211,13 @@ public class MainController {
             model.put("currentPhone", currentPhone);
         }
 
-        System.out.println(model.get("currentPhone"));
-        System.out.print(model);
 //        List<VideoMeetMember> videoMeetMemberList = videoMeetMemberService.selectMemberListByMeetId(meetId);
 //        map.put("videoMeetMemberList", JSONArray.fromObject(videoMeetMemberList).toString());
-        //return new ModelAndView("videoMeetDetail", model);
         return new ModelAndView("newjsp/meetingDetails", model);
-
+        //      return new ModelAndView("videoMeetDetail", model);
     }
+
+
 
 
     @RequestMapping (value = "/updateVideoMeet/{meetId}", method = RequestMethod.POST)
@@ -271,7 +277,6 @@ public class MainController {
 
 
 
-
     @RequestMapping (value = "/deleteByMeetIdAndMemberPhone/{meetId}", method = RequestMethod.POST)
     @ResponseBody
     public Object deleteByMeetIdAndMemberPhone(@PathVariable Integer meetId, @RequestParam("phone") String phone)
@@ -303,8 +308,6 @@ public class MainController {
         }
         return new ResponseEntity<String>(JSONObject.fromObject(videoMeetInfo).toString(), HttpStatus.OK);
     }
-
-
 
     @RequestMapping (value = "/startVideoMeet", method = RequestMethod.POST)
     @ResponseBody
@@ -364,6 +367,51 @@ public class MainController {
 
 
 
+
+    /*
+    @RequestMapping (value = "/startVideoMeet", method = RequestMethod.POST)
+    @ResponseBody
+    public Object startVideoMeet(@RequestParam("meetSubject") String meetSubject,
+                                 @RequestParam ("chairmanName") String chairmanName,
+                                 @RequestParam ("chairmanPhone") String chairmanPhone,
+                                 @RequestParam ("chairmanInfo") String chairmanInfo,
+                                 @RequestParam ("members") String members) {
+//        if (meetSubject.length() > 40) {
+//            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+//        }
+
+       SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String meetDateTime = format.format(new Date());
+        if(StringUtils.isEmpty(chairmanName)) {
+            chairmanName = chairmanPhone;
+        }
+        VideoMeetInfo videoMeetInfo = new VideoMeetInfo(meetSubject, chairmanName, chairmanPhone, chairmanInfo, meetDateTime, members);
+        int result = videoMeetInfoService.saveVideoMeetInfo(videoMeetInfo);
+        if (result <= 0) {
+            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+        }
+
+        List<VideoMeetMember> videoMeetMemberList = new ArrayList<>();
+        JSONArray jsonArray = JSONArray.fromObject(members);
+        Iterator<Object> it = jsonArray.iterator();
+        while (it.hasNext()) {
+            JSONObject jsonObject = (JSONObject) it.next();
+            VideoMeetMember videoMeetMember = new VideoMeetMember();
+            videoMeetMember.setMeetId(videoMeetInfo.getMeetId());
+            videoMeetMember.setMemberName(jsonObject.getString("name"));
+            videoMeetMember.setMemberPhone(jsonObject.getString("phone"));
+            videoMeetMember.setMemberInfo(jsonObject.toString());
+            videoMeetMemberList.add(videoMeetMember);
+        }
+
+        result = videoMeetMemberService.saveMemberList(videoMeetMemberList);
+        if (result <=0 ) {
+            return new ResponseEntity<String>("Failed", HttpStatus.FORBIDDEN);
+        }
+        sendMeetNotifyMsg(videoMeetInfo, videoMeetMemberList);
+        return new ResponseEntity<String>(JSONObject.fromObject(videoMeetInfo).toString(), HttpStatus.OK);
+    }
+    */
 
     @RequestMapping("/sendMeetNotify/{meetId}")
     @ResponseBody
@@ -450,7 +498,7 @@ public class MainController {
         final String summary = "会议ID：" + videoMeetInfo.getMeetId() + "\r\n" +
                 "会议时间：" + videoMeetInfo.getMeetDatetime() + "\r\n" +
                 "会议发起人：" + videoMeetInfo.getChairmanName() + " " + videoMeetInfo.getChairmanPhone()+"\r\n";
-        final String redirectUrl = "http://120.27.131.68:8086/VideoMeet/showVideoMeetInfoDetail/"+videoMeetInfo.getMeetId()+"?currentPhone=";
+        final String redirectUrl = MEET_URL + "VideoMeet/showVideoMeetInfoDetail/"+videoMeetInfo.getMeetId()+"?currentPhone=";
         final String senderNumber = videoMeetInfo.getChairmanPhone();
         new Thread(new Runnable() {
             @Override
