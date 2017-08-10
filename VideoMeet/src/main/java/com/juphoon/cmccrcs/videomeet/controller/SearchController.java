@@ -1,11 +1,11 @@
 package com.juphoon.cmccrcs.videomeet.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.juphoon.cmccrcs.videomeet.common.MD5_encryption;
 import com.juphoon.cmccrcs.videomeet.common.ResponseEntity;
 import com.juphoon.cmccrcs.videomeet.entity.UserInfo;
 import com.juphoon.cmccrcs.videomeet.entity.VideoMeetInfo;
 import com.juphoon.cmccrcs.videomeet.entity.demo;
-import com.juphoon.cmccrcs.videomeet.mapper.VideoMeetInfoMapper;
 import com.juphoon.cmccrcs.videomeet.service.UserInfoService;
 import com.juphoon.cmccrcs.videomeet.service.VideoMeetInfoService;
 import org.apache.poi.hssf.usermodel.*;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -118,13 +117,14 @@ public class SearchController {
 //       response.addCookie(namecookie);
 //      response.setHeader("Access-Control-Allow-Credentials","true");
 
-        if (userInfoService.login(username) == null) {
+        if (userInfoService.login(username) == null)
+            {
             return ResponseEntity.fail();
+           }
 
-        }
             String password1 = userInfoService.login(username);
 
-            if (password1.equals(password)) {
+            if (password1.equals(MD5_encryption.MD5(password))) {
                 return ResponseEntity.success();
             }
                 return ResponseEntity.fail();
