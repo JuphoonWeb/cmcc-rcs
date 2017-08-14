@@ -152,10 +152,10 @@
         	</div>
 
     		<div class="add mobile-add hidden-md hidden-lg">
-                <a href="#"><img src="/img/mobile-add.svg" alt=""></a>
+                <img src="/img/mobile-add.svg" alt="">
             </div>
     		<div class="add pc-add hidden-xs hidden-sm" title="添加联系人到会议">
-                <a href="#"><img src="/img/pc-add.png" alt=""></a>
+                <img src="/img/pc-add.png" alt="">
             </div>
 	    </div>
     </div>
@@ -259,39 +259,7 @@
         openAppWithJoinMeet(meetId, "", displayName);
     }
 
-    function sendMeetNotify() {
-        $.ajax({
-            data:{},
-            url:'/VideoMeet/sendMeetNotify/'+${videoMeetInfo.meetId},
-            type: 'get', //HTTP请求类型
-            timeout: 5000, //超时时间设置为10秒；
-            success: function(data) {
-                console.log(data);
-                if ('ok' == data)
-                {
-                    dialog('发送通知成功');
-                }
-                else
-                {
-                    dialog('发送通知失败');
-                }
-            },
-            error: function(xhr, type, errorThrown) {
-                dialog('服务器内部连接超时，请稍后再试');
-            }
-        });
-    }
-    $('.add').click(function(){
-        $(this).addClass('rotate');
-        setTimeout(function(){$('#mini-menu-container').toggle()},200);
-        $(this).on('animationend',function(){
-            $(this).removeClass('rotate');
-        })
-        $('#mini-menu-mask').click(function(){
-            $('#mini-menu-container').hide();
-        })
-    })
-    <%--$('#change-end-time').click(function(){--%>
+       <%--$('#change-end-time').click(function(){--%>
         <%--$('#mini-menu-container').hide();--%>
         <%--var defaultTime=$('#begin-datetime').text();--%>
         <%--var datePicker = new DateTimePicker.Date({--%>
@@ -332,6 +300,42 @@
         <%--})--%>
 
     <%--})--%>
+
+    function sendMeetNotify() {
+        $.ajax({
+            data:{},
+            url:'/VideoMeet/sendMeetNotify/'+${videoMeetInfo.meetId},
+            type: 'get', //HTTP请求类型
+            timeout: 5000, //超时时间设置为10秒；
+            success: function(data) {
+                console.log(data);
+                if ('ok' == data)
+                {
+                    dialog('发送通知成功');
+                }
+                else
+                {
+                    dialog('发送通知失败');
+                }
+            },
+            error: function(xhr, type, errorThrown) {
+                dialog('服务器内部连接超时，请稍后再试');
+            }
+        });
+    }
+
+    $('.add').click(function(){
+//        $(this).addClass('rotate');
+//        setTimeout(function(){$('#mini-menu-container').toggle()},200);
+        $('#mini-menu-container').toggle();
+//        $(this).on('animationend',function(){
+//            $(this).removeClass('rotate');
+//        })
+        $('#mini-menu-mask').click(function(){
+            $('#mini-menu-container').hide();
+        })
+    })
+
 
     $('#change-end-time').click(function(){
         $('#mini-menu-container').hide();
