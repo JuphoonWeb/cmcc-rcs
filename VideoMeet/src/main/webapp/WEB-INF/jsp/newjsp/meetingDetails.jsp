@@ -344,11 +344,13 @@
     });
 
     function setEndTime(backID,dateStr){
-        if($('#end-datetime').text() != '' &&
+        if(dateStr === '') {
+            return;
+        }else if($('#end-datetime').text() != '' &&
             ($('#end-datetime').text() < $('#begin-datetime').text()) ){
             dialog('结束时间不能在开始时间之前')
         }else{
-            $('#end-datetime').text(dateStr);
+
             $.ajax({
                 type:'post',
                 url:'/VideoMeet/delayEndMeetTime/${videoMeetInfo.meetId}',
@@ -357,6 +359,7 @@
                     endDatetime:dateStr,
                 },
                 success:function(data){
+                    $('#end-datetime').text(dateStr);
                 },
                 error:function(data){
                     $(document).dialog({
