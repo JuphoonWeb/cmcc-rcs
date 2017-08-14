@@ -325,12 +325,11 @@
     }
 
     $('.add').click(function(){
-//        $(this).addClass('rotate');
-//        setTimeout(function(){$('#mini-menu-container').toggle()},200);
-        $('#mini-menu-container').toggle();
-//        $(this).on('animationend',function(){
-//            $(this).removeClass('rotate');
-//        })
+        $(this).addClass('rotate');
+        setTimeout(function(){$('#mini-menu-container').toggle()},200);
+        $(this).on('animationend',function(){
+            $(this).removeClass('rotate');
+        })
         $('#mini-menu-mask').click(function(){
             $('#mini-menu-container').hide();
         })
@@ -460,14 +459,16 @@
                 content: '确定将该联系人从会议中删除吗？',
                 onClickConfirmBtn:function(){
                     var index=$('.list-group-item').index(currentItem);
+                    alert(index)
                     $.ajax({
                         type:'post',
                         url:'/VideoMeet/deleteByMeetIdAndMemberPhone/${videoMeetInfo.meetId}',
                         dataType:'json',
                         data:{
-                            phone:${videoMeetInfo.members}[index].phone,
+                            phone:membersJsonArray[index].phone,
                         },
                         success:function(data){
+                            membersJsonArray.splice(index,1);
                             $("#demo").children().remove();
                             var jsonObj=JSON.parse(data.members);
                             var txt='';
@@ -476,6 +477,7 @@
                                 txt+='<div class="list-group-item"> <a href="">'+jsonObj[i].name+'</a> <span onclick="optionVerticalHandler(this)" id="test" class="glyphicon  glyphicon-option-vertical pull-right" id="option-vertical"></span> </div>'
                             }
                             $("#demo").html(txt);
+
                         },
                         error:function(data){
                             $(document).dialog({
