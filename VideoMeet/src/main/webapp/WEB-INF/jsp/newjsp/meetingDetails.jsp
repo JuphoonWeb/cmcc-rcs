@@ -427,6 +427,7 @@
 					success:function(data){
                         $("#demo").children().remove();
 					    var jsonObj=JSON.parse(data.members);
+					    membersJsonArray = jsonObj;
 					    var txt='';
                         for (var i = 0; i < jsonObj.length; i++)
                         {
@@ -450,16 +451,16 @@
     //成员列表右侧三点菜单按钮逻辑
     function optionVerticalHandler(el){
         var currentItem=el.parentNode;
+        var index=$('.list-group-item').index(currentItem);
         $('#bottom-menu-container').show();
         $('#delete').on('click',function(){
             $('#bottom-menu-container').hide();
             $(document).dialog({
                 type : 'confirm',
                 overlayClose:true,
-                content: '确定将该联系人从会议中删除吗？',
+                content: '确定将联系人 ['+membersJsonArray[index].name+'] 从会议中删除吗？',
                 onClickConfirmBtn:function(){
-                    var index=$('.list-group-item').index(currentItem);
-                    alert(index)
+
                     $.ajax({
                         type:'post',
                         url:'/VideoMeet/deleteByMeetIdAndMemberPhone/${videoMeetInfo.meetId}',
@@ -468,9 +469,10 @@
                             phone:membersJsonArray[index].phone,
                         },
                         success:function(data){
-                            membersJsonArray.splice(index,1);
+
                             $("#demo").children().remove();
                             var jsonObj=JSON.parse(data.members);
+                            membersJsonArray = jsonObj;
                             var txt='';
                             for (var i = 0; i < jsonObj.length; i++)
                             {
