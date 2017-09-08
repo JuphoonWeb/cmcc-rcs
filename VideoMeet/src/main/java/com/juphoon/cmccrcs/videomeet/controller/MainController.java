@@ -14,6 +14,7 @@ import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,7 +50,8 @@ public class MainController {
     private RcsMsgService rcsMsgService;
 
     //    private static String MEET_URL = "http://120.27.131.68:8086/";
-    private static String MEET_URL = "http://122.227.209.194:8086/";
+    @Value("${viede_meet_url}")
+    private String MEET_URL;
 
     @RequestMapping("/index")
     public String index(HttpServletRequest request, Model model) {
@@ -87,6 +89,7 @@ public class MainController {
 
     @RequestMapping(value="/videoMeetList/{currentPhone}", method = RequestMethod.GET)
     public String videoMeetListWithPhone(HttpSession httpSession, Model model, @PathVariable String currentPhone) {
+        logger.info(MEET_URL);
         model.addAttribute("currentPhone", currentPhone);
         httpSession.setAttribute("currentPhone", currentPhone);
         return "newjsp/multiMeeting";

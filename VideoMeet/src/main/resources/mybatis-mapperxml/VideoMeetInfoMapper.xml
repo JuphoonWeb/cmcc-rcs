@@ -156,11 +156,10 @@
     select chairman_name , count(*) as user_count from video_meet_info
     <where>
       <if test="startTime!=null and startTime!=''and endTime!=''and endTime!='' ">
-
-        create_datetime BETWEEN #{startTime} AND #{endTime} group by chairman_name
-
+        create_datetime BETWEEN #{startTime} AND #{endTime}
       </if>
     </where>
+    group by chairman_name
   </select>
 
 

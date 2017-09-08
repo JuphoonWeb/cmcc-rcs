@@ -26,7 +26,9 @@ public class CorsFilter implements Filter {
         System.out.println("*********************************跨域过滤器被使用**************************");
         chain.doFilter(req, res);
     }
-    public void init(FilterConfig filterConfig) {}
+    public void init(FilterConfig filterConfig) {
+
+    }
     public void destroy()
     {
     }

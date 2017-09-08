@@ -17,7 +17,10 @@ public class MyWebAppConfigurer
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(new MyInterceptor1()).addPathPatterns("/VideoMeet/**").excludePathPatterns("/VideoMeet/videoMeetList/**")
-                .excludePathPatterns("/VideoMeet/videoMeetList/{currentPhone}").excludePathPatterns("/VideoMeet/error11");
+                .excludePathPatterns("/VideoMeet/videoMeetList/{currentPhone}")
+                .excludePathPatterns("/VideoMeet/error11")
+                .excludePathPatterns("/VideoMeet/showVideoMeetInfoDetail/{meetId}")
+                .excludePathPatterns("/VideoMeet/sendMeetNotify/{meetId}");
         super.addInterceptors(registry);
     }
 

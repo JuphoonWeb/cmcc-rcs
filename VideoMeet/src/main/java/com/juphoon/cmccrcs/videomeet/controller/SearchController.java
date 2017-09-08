@@ -52,18 +52,14 @@ public class SearchController {
                                                @RequestParam(defaultValue = "20") Integer size,
                                                @RequestParam String startTime,
                                                @RequestParam String endTime,
-                                               HttpServletResponse response,
                                                @RequestParam(required = false) String name) {
 
         try {
-            response.setHeader("Access-Control-Allow-Credentials","true");
             PageInfo<VideoMeetInfo> pageInfo = videoMeetInfoService.selectByTimeInfoList(page, size, startTime, endTime, name);
             return ResponseEntity.success(getMap(pageInfo));
-             }
-             catch (Exception e)
-             {
+        } catch (Exception e) {
             return ResponseEntity.fail(getFailMap());
-             }
+        }
     }
 
 
@@ -108,26 +104,18 @@ public class SearchController {
      */
     @RequestMapping("/login")
     @ResponseBody
-    public ResponseEntity getSendVideoMeetList(HttpServletResponse response,String username, String password) {
+    public ResponseEntity getSendVideoMeetList(String username, String password) {
 
-
-//        Cookie namecookie = new Cookie("name",username);
-//       namecookie.setMaxAge(60*30);
-//       namecookie.setPath("/");
-//       response.addCookie(namecookie);
-//      response.setHeader("Access-Control-Allow-Credentials","true");
-
-        if (userInfoService.login(username) == null)
-            {
+        if (userInfoService.login(username) == null) {
             return ResponseEntity.fail();
-           }
+        }
 
-            String password1 = userInfoService.login(username);
+        String password1 = userInfoService.login(username);
 
-            if (password1.equals(MD5_encryption.MD5(password))) {
-                return ResponseEntity.success();
-            }
-                return ResponseEntity.fail();
+        if (password1.equals(MD5_encryption.MD5(password))) {
+            return ResponseEntity.success();
+        }
+        return ResponseEntity.fail();
 
 
     }
@@ -145,7 +133,7 @@ public class SearchController {
         //   ExportExcel<VideoMeetInfo> ex = new ExportExcel<VideoMeetInfo>();
         String[] headers = {"会议主题", "发起人姓名", "发起人手机", "会议创建时间", "会议开始时间", "会议结束时间"};
         PageInfo<VideoMeetInfo> pageInfo1 = videoMeetInfoService.selectByTime(startTime, endTime, name);
-        List<VideoMeetInfo> pageInfo=pageInfo1.getList();
+        List<VideoMeetInfo> pageInfo = pageInfo1.getList();
         List<demo> dataset = new ArrayList<demo>();
         for (int i = 0; i < pageInfo.size(); i++) {
             dataset.add(new demo(
@@ -237,32 +225,32 @@ public class SearchController {
                 }
             }
         }
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
-        Date date=null;
-        Date date2=null;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        Date date2 = null;
 
         try {
-            date=formatter.parse(startTime);
+            date = formatter.parse(startTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         try {
-            date2=formatter.parse(endTime);
+            date2 = formatter.parse(endTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
 
-        String time=formatter.format(date);
-        String time2=formatter.format(date2);
+        String time = formatter.format(date);
+        String time2 = formatter.format(date2);
 //		System.out.println(videoMeetInfoMapper.selectByTimeCount(startTime,endTime));
         //    System.out.println( "startTime:"+time);
 
 
-        String fileName = "多方视频会议"+time + "~" + time2 + ".xls";
+        String fileName = "多方视频会议" + time + "~" + time2 + ".xls";
 
         // String headStr = "attachment; filename=\"" + fileName + "\"";
-        String headStr = "attachment;filename=" + new String( fileName.getBytes("gb2312"), "ISO8859-1" );
+        String headStr = "attachment;filename=" + new String(fileName.getBytes("gb2312"), "ISO8859-1");
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", headStr);
         //response.setHeader("Content-disposition", "attachment;filename=\\\"\" + fileName + \"\\\"\"");
