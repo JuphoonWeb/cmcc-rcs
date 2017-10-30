@@ -1,6 +1,9 @@
 package com.juphoon.cmccrcs.videomeet.service;
 
 import com.juphoon.cmccrcs.videomeet.utils.DatetimeUtils;
+import com.juphoon.cmccrcs.videomeet.utils.PhoneUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,8 @@ import java.util.Base64;
  */
 @Service
 public class RcsMsgService {
+
+    private Logger logger = LoggerFactory.getLogger(RcsMsgService.class);
 
     private final static String CAP_ACCESS_NUMBER = "125600400000025";
     private final static String CAP_MSG_URL_BUSINESS = "http://117.136.180.205:8080/capabilitydiscovery/messaging/v1.0/outbound/tel:"+CAP_ACCESS_NUMBER+"/requests";
@@ -66,6 +71,7 @@ public class RcsMsgService {
         headers.add("Address","tel:+86"+recvNumber);
 
         String body = createMsgXmlWithMediaType(senderNumber, recvNumber, msgMediaType, title, summary, content, redirectUrl);
+        logger.info(body);
         HttpEntity<String> entity = new HttpEntity<String>(body, headers);
         try {
 //            System.out.println("HttpEntity Headers :"+entity.getHeaders().toString());
@@ -106,9 +112,9 @@ public class RcsMsgService {
         String thumbLink = redirectUrl;
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<msg:outboundMessageRequest xmlns:msg=\"urn:oma:xml:rest:netapi:messaging:1\">" +
-                "<address>tel:+86"+recvNumber+"</address>" +
-                "<destAddress>tel:+86"+recvNumber+"</destAddress>" +
-                "<senderAddress>tel:+86"+senderNumber+"</senderAddress>" +
+                "<address>tel:"+ PhoneUtils.getRcsPhone(recvNumber)+"</address>" +
+                "<destAddress>tel:"+PhoneUtils.getRcsPhone(recvNumber)+"</destAddress>" +
+                "<senderAddress>tel:"+PhoneUtils.getRcsPhone(senderNumber)+"</senderAddress>" +
                 "<outboundIMMessage>" +
                 "<imFormat>IM</imFormat>" +
                 "<contentType>application/commontemplate+xml</contentType>" +

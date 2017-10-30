@@ -325,6 +325,9 @@ public class MainController {
         // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //String meetDateTime = format.format(new Date());
         //String endDatetime="";
+        if(StringUtils.isEmpty(chairmanName)) {
+            chairmanName = chairmanPhone;
+        }
         VideoMeetInfo videoMeetInfo = new VideoMeetInfo(meetSubject, chairmanName, chairmanPhone, chairmanInfo, meetDateTime,endDatetime, members);
         int result = videoMeetInfoService.saveVideoMeetInfo(videoMeetInfo);
         if (result <= 0) {
